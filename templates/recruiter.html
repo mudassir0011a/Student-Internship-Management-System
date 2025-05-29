@@ -1,0 +1,3103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Recruiter Dashboard - InternshipHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Zg1G8nbLgCjA2xP7tFqIMJ+9r59DL/n3sVu9Kc+i3aIX5ZG/4XzwWnLqVu6zFi+xYF88V6r6O5A/ikN9JW/bZA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        /* ======================= */
+        /* CSS Variables */
+        /* ======================= */
+        :root {
+            --primary: #4a4e69;
+            /* Desaturated indigo for a sophisticated look */
+            --secondary: #9a8c98;
+            /* Muted mauve for softer accents */
+            --background: #f7ede2;
+            /* Light beige for a warm aesthetic */
+            --text: #22223b;
+            /* Dark blue-gray for contrast */
+            --highlight: #c9ada7;
+            /* Rose beige for highlights */
+            --light: #ffffff;
+            /* Crisp white for clean sections */
+            --dark: #2a2a2a;
+            /* Dark gray for secondary elements */
+            --accent: #f4a261;
+            /* Soft orange for CTAs or highlights */
+            --success: #4CAF50;
+            /* Green for success states */
+            --warning: #FFC107;
+            /* Yellow for warning states */
+            --danger: #DC3545;
+            /* Red for danger/error states */
+        }
+
+        /* ======================= */
+        /* General Reset */
+        /* ======================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            margin: 0;
+            padding-top: 60px;
+        }
+
+        /* ======================= */
+        /* Navbar Styling */
+        /* ======================= */
+        .navbar {
+            background-color: var(--primary);
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            color: var(--light);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--light);
+            font-size: 1rem;
+            margin-right: 1rem;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--highlight);
+        }
+
+        .btn-login,
+        .btn-signup,
+        .btn-dashboard,
+        .btn-logout {
+            color: var(--light);
+            border-radius: 20px;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            margin-left: 0.5rem;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .btn-login {
+            background-color: transparent;
+            border: 1px solid var(--light);
+            width: 6rem;
+        }
+
+        .btn-signup {
+            background-color: transparent;
+            border: 1px solid var(--light);
+            width: 6rem;
+        }
+
+        .btn-dashboard {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.4rem 1.3rem;
+            border-radius: 5rem;
+            text-decoration: none;
+        }
+
+        .btn-logout {
+            background-color: #c9ada7;
+            color: black;
+            padding: 0.4rem 1.2rem;
+            border-radius: 5rem;
+            text-decoration: none;
+        }
+
+        .btn-login:hover {
+            background-color: var(--light);
+            color: var(--primary);
+        }
+
+        .btn-signup:hover {
+            color: white;
+            border: 2px solid bisque;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-dashboard:hover {
+            background-color: var(--secondary);
+            color: var(--background);
+        }
+
+        .btn-logout:hover {
+            background-color: var(--primary);
+            color: var(--background);
+            border: 1px solid #c9ada7;
+        }
+
+        .navbar-nav .nav-link.active {
+            color: var(--highlight);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--light);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* ======================= */
+        /* Dark Mode Toggle */
+        /* ======================= */
+        .dark-mode-toggle {
+            position: relative;
+            margin-left: 15px;
+        }
+
+        .dark-mode-toggle input {
+            display: none;
+        }
+
+        .dark-mode-label {
+            cursor: pointer;
+            display: block;
+            width: 50px;
+            height: 26px;
+            position: relative;
+        }
+
+        .circle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50px;
+            height: 26px;
+            background-color: #f1f1f1;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5px;
+        }
+
+        .sun,
+        .moon {
+            width: 16px;
+            height: 16px;
+            color: #333;
+        }
+
+        .moon {
+            display: none;
+        }
+
+        #darkModeToggle:checked+.dark-mode-label .circle {
+            background-color: #333;
+        }
+
+        #darkModeToggle:checked+.dark-mode-label .sun {
+            display: none;
+        }
+
+        #darkModeToggle:checked+.dark-mode-label .moon {
+            display: block;
+            color: #f1f1f1;
+        }
+
+        /* ======================= */
+        /* Dashboard Layout */
+        /* ======================= */
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 60px);
+        }
+
+        /* ======================= */
+        /* Sidebar */
+        /* ======================= */
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary);
+            color: var(--light);
+            padding: 20px 0;
+            position: fixed;
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            z-index: 900;
+            left: 0;
+            /* Ensure sidebar starts visible */
+        }
+
+        .sidebar.collapsed {
+            left: -260px;
+            /* Move completely off-screen when collapsed */
+            width: 0;
+            /* Set width to 0 to ensure it's fully hidden */
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sidebar-header h3 {
+            font-size: 1.2rem;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-toggle {
+            background: transparent;
+            border: none;
+            color: var(--light);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: var(--light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--highlight);
+        }
+
+        .sidebar-menu i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-menu span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ======================= */
+        /* Main Content */
+        /* ======================= */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+            /* Full width when sidebar is collapsed */
+        }
+
+        .dashboard-header {
+            margin-bottom: 30px;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-header p {
+            color: var(--secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ======================= */
+        /* Dashboard Cards */
+        /* ======================= */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: var(--light);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .card p {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin: 0;
+        }
+
+        /* ======================= */
+        /* Dashboard Sections */
+        /* ======================= */
+        .dashboard-section {
+            background-color: var(--light);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-section h2 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--highlight);
+        }
+
+        /* ======================= */
+        /* Post Internship Form */
+        /* ======================= */
+        .post-form {
+            max-width: 800px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn-save,
+        .btn-post {
+            background-color: var(--primary);
+            color: var(--light);
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-save:hover,
+        .btn-post:hover {
+            background-color: var(--secondary);
+        }
+
+        /* ======================= */
+        /* Applications Table */
+        /* ======================= */
+        .applications-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .applications-table th,
+        .applications-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .applications-table th {
+            background-color: var(--primary);
+            color: var(--light);
+            font-weight: 500;
+        }
+
+        .applications-table tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .applications-table .btn {
+            padding: 5px 10px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-view {
+            background-color: var(--primary);
+            color: var(--light);
+        }
+
+        .btn-accept {
+            background-color: var(--success);
+            color: var(--light);
+        }
+
+        .btn-reject {
+            background-color: var(--danger);
+            color: var(--light);
+        }
+
+        .btn-view:hover,
+        .btn-accept:hover,
+        .btn-reject:hover {
+            opacity: 0.9;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background-color: var(--warning);
+            color: #000;
+        }
+
+        .status-accepted {
+            background-color: var(--success);
+            color: var(--light);
+        }
+
+        .status-rejected {
+            background-color: var(--danger);
+            color: var(--light);
+        }
+
+        /* ======================= */
+        /* Company Profile */
+        /* ======================= */
+        .company-profile {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .company-logo {
+            width: 150px;
+            height: 150px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 5px solid var(--highlight);
+        }
+
+        .company-details {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .company-details h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .company-details p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .company-details i {
+            width: 25px;
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        .company-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        /* ======================= */
+        /* Internship Cards */
+        /* ======================= */
+        .internship-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .internship-card {
+            background-color: var(--light);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .internship-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .internship-card .card-header {
+            background-color: var(--primary);
+            color: var(--light);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .internship-card .card-body {
+            padding: 15px;
+        }
+
+        .internship-card h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .internship-card p {
+            margin-bottom: 10px;
+        }
+
+        .internship-card .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-edit,
+        .btn-delete {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-edit {
+            background-color: var(--primary);
+            color: var(--light);
+        }
+
+        .btn-delete {
+            background-color: var(--danger);
+            color: var(--light);
+        }
+
+        .btn-edit:hover,
+        .btn-delete:hover {
+            opacity: 0.9;
+        }
+
+        /* ======================= */
+        /* Footer Section */
+        /* ======================= */
+        .footer {
+            background-color: #4a4e69;
+            color: #ffffff;
+            padding: 2rem 1rem;
+            font-family: Arial, sans-serif;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-section {
+            flex: 1 1 300px;
+            margin: 1rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            font-size: 0.9rem;
+            color: #f0f0f0;
+            line-height: 1.6;
+            text-decoration: none;
+        }
+
+        .footer-section a:hover {
+            color: #d1e0ff;
+            text-decoration: underline;
+        }
+
+        .quick-links ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .quick-links ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 0.9em;
+            margin-top: 0.1rem;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light);
+            font-size: 1.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background-color: var(--highlight);
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 1rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* ======================= */
+        /* Dark Mode Styling */
+        /* ======================= */
+        .dark-mode {
+            --background: #121212;
+            --text: #ffffff;
+            --light: #1e1e1e;
+            --dark: #333333;
+            --primary: #6b8cff;
+            --secondary: #bb86fc;
+            --highlight: #03dac6;
+            --accent: #ff7597;
+        }
+
+        .dark-mode .card,
+        .dark-mode .dashboard-section,
+        .dark-mode .internship-card {
+            background-color: var(--light);
+            color: var(--text);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .dark-mode .card h3,
+        .dark-mode .dashboard-section h2,
+        .dark-mode .form-group label {
+            color: var(--highlight);
+        }
+
+        .dark-mode .internship-card .card-header {
+            background-color: var(--primary);
+        }
+
+        .dark-mode .form-group input,
+        .dark-mode .form-group select,
+        .dark-mode .form-group textarea {
+            background-color: var(--dark);
+            color: var(--text);
+            border-color: var(--primary);
+        }
+
+        .dark-mode .btn-edit,
+        .dark-mode .btn-delete,
+        .dark-mode .btn-save,
+        .dark-mode .btn-post {
+            background-color: var(--primary);
+            color: var(--dark);
+        }
+
+        .dark-mode .btn-edit:hover,
+        .dark-mode .btn-delete:hover,
+        .dark-mode .btn-save:hover,
+        .dark-mode .btn-post:hover {
+            background-color: var(--secondary);
+        }
+
+        .dark-mode .applications-table th {
+            background-color: var(--primary);
+            color: var(--dark);
+        }
+
+        .dark-mode .applications-table td {
+            border-bottom: 1px solid var(--dark);
+        }
+
+        /* ======================= */
+        /* Responsive Design */
+        /* ======================= */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 260px;
+                left: -260px;
+                /* Start hidden on medium screens */
+            }
+
+            .sidebar.active {
+                left: 0;
+                /* Show when active */
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .main-content.expanded {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .company-profile {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .company-details p {
+                justify-content: center;
+            }
+
+            .company-actions {
+                justify-content: center;
+            }
+
+            .internship-list {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .social-icons {
+                justify-content: center;
+                margin-right: 0;
+            }
+
+            .applications-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        /* Mobile Sidebar Toggle Button */
+        .sidebar-toggle-mobile {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: var(--light);
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            cursor: pointer;
+            border: none;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar-toggle-mobile {
+                display: flex;
+            }
+        }
+
+        /* Back to Top Button */
+        #back-to-top {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            color: var(--light);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        #back-to-top:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        #back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #back-to-top i {
+            transition: transform 0.3s ease;
+        }
+
+        #back-to-top:hover i {
+            transform: translateY(-3px);
+        }
+
+        /* Overlay for mobile sidebar */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 899;
+            display: none;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* Sidebar Reopen Button */
+        .sidebar-reopen {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            color: var(--light);
+            border: none;
+            border-radius: 0 5px 5px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 900;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-reopen.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar-reopen:hover {
+            background-color: var(--secondary);
+        }
+        /* ======================= */
+/* Password Visibility Toggle */
+/* ======================= */
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 40px; /* Space for the eye icon */
+    box-sizing: border-box;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888; /* Or use var(--primary) if defined */
+    font-size: 1.2rem;
+    z-index: 2;
+}
+
+    </style>
+</head>
+<!-- Navbar -->
+<div id="navbar">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#"> <i class="fas fa-laptop-code"></i> <span>InternshipHub</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="internships.html">Internships</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about_us.html">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact_us.html">Contact Us</a></li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <!-- Dynamic Buttons -->
+                    <a href="recruiter.html" id="dashboard-link" class="btn btn-dashboard me-2">Dashboard</a>
+                    <a href="#" id="logout-link" class="btn btn-logout">Logout</a>
+                </div>
+            </div>
+        </div>
+        <!-- Dark Mode Toggle -->
+        <div class="dark-mode-toggle">
+            <input type="checkbox" id="darkModeToggle">
+            <label for="darkModeToggle" class="dark-mode-label">
+                <div class="circle">
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.5 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z" />
+                    </svg>
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.7-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </label>
+        </div>
+    </nav>
+</div>
+
+<!-- Sidebar Overlay (for mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- Sidebar Reopen Button -->
+<button class="sidebar-reopen" id="sidebarReopen">
+    <i class="fas fa-chevron-right"></i>
+</button>
+
+<!-- Dashboard Container -->
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Recruiter Panel</h3>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <ul class="sidebar-menu">
+            <li>
+                <a href="#dashboard" class="active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="#company-profile">
+                    <i class="fas fa-building"></i>
+                    <span>Company Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="#post-internship">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Post Internship</span>
+                </a>
+            </li>
+            <li>
+                <a href="#manage-internships">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Manage Internships</span>
+                </a>
+            </li>
+            <li>
+                <a href="#applications">
+                    <i class="fas fa-users"></i>
+                    <span>Applications</span>
+                </a>
+            </li>
+            <li>
+                <a href="#settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="dashboard-header">
+            <h1>Welcome to Recruiter Dashboard</h1>
+            <p>Manage your internship postings and applicants efficiently</p>
+        </div>
+
+        <!-- Dashboard Overview Cards -->
+        <div class="dashboard-cards">
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <h3>Active Internships</h3>
+                <p>8</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Total Applicants</h3>
+                <p>156</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>Pending Reviews</h3>
+                <p>12</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <h3>Hired Interns</h3>
+                <p>24</p>
+            </div>
+        </div>
+
+        <!-- Company Profile Section -->
+<section id="company-profile" class="dashboard-section">
+    <h2>Company Profile</h2>
+    <div class="company-profile">
+        <img src="{% if recruiter_info.logo %}/static/uploads/{{ recruiter_info.logo }}{% else %}/static/images/default_logo.png{% endif %}"
+     alt="Company Logo" class="company-logo" id="company-logo">
+        <div class="company-details">
+            <h3 id="company-name">{{ recruiter_info.company_name }}</h3>
+            <p><i class="fas fa-map-marker-alt"></i> <span id="company-location">{{ recruiter_info.location or 'N/A' }}</span></p>
+            <p><i class="fas fa-globe"></i> <span id="company-website">{{ recruiter_info.website or 'N/A' }}</span></p>
+            <p><i class="fas fa-envelope"></i> <span id="company-email">{{ recruiter_info.email }}</span></p>
+            <p><i class="fas fa-phone"></i> <span id="company-phone">{{ recruiter_info.phone or 'N/A' }}</span></p>
+            <p><i class="fas fa-info-circle"></i> <span id="company-description">{{ recruiter_info.description or 'N/A' }}</span></p>
+            <div class="company-actions">
+                <button class="btn-edit" data-bs-toggle="modal" data-bs-target="#editCompanyModal">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Company Profile Modal -->
+    <div class="modal fade" id="editCompanyModal" tabindex="-1" aria-labelledby="editCompanyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCompanyModalLabel">Edit Company Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editCompanyForm">
+                        <div class="form-group mb-3">
+                            <label for="edit-name" class="form-label">Company Name*</label>
+                            <input type="text" class="form-control" id="edit-name" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="edit-location" class="form-label">Location*</label>
+                            <input type="text" class="form-control" id="edit-location" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="edit-website" class="form-label">Website*</label>
+                            <input type="url" class="form-control" id="edit-website" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="edit-email" class="form-label">Email*</label>
+                            <input type="email" class="form-control" id="edit-email" readonly>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="edit-phone" class="form-label">Phone*</label>
+                            <input type="tel" class="form-control" id="edit-phone" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="edit-description" class="form-label">Description*</label>
+                            <textarea class="form-control" id="edit-description" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="edit-logo" class="form-label">Update Logo (Image file)</label>
+                            <input type="file" class="form-control" id="edit-logo" accept="image/*">
+                        </div>
+                        <button type="submit" class="btn btn-save w-100">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+            <!-- Post Internship Section (Updated) -->
+            <section id="post-internship" class="dashboard-section">
+                <h2>Post a New Internship</h2>
+                <form class="post-form" id="postInternshipForm" action="/post" method="POST" enctype="multipart/form-data">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="company">Company Name*</label>
+                                <input type="text" id="company" name="company" value="{{ recruiter_info.company_name }}" readonly required>
+                            </div>
+                            <div class="form-group">
+                                <label for="location">Location*</label>
+                                <input type="text" id="location" name="location" value="{{ recruiter_info.location }}" readonly required>
+                            </div>
+                        </div>
+                        
+
+                    <div class="form-group">
+                        <label for="title">Internship Title*</label>
+                        <input type="text" id="title" name="title" placeholder="e.g., Content Writer Intern" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="department">Department*</label>
+                        <select id="department" name="department" required>
+                            <option value="">Select Department</option>
+                            <option value="engineering">Engineering</option>
+                            <option value="design">Design</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="sales">Sales</option>
+                            <option value="hr">Human Resources</option>
+                            <option value="finance">Finance</option>
+                            <option value="content">Content</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="internshipType">Internship Type*</label>
+                            <select id="internshipType" name="internshipType" required>
+                                <option value="">Select Type</option>
+                                <option value="remote-paid">Remote, Paid</option>
+                                <option value="remote-unpaid">Remote, Unpaid</option>
+                                <option value="onsite-paid">Onsite, Paid</option>
+                                <option value="onsite-unpaid">Onsite, Unpaid</option>
+                                <option value="hybrid-paid">Hybrid, Paid</option>
+                                <option value="hybrid-unpaid">Hybrid, Unpaid</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="duration">Duration (Months)*</label>
+                            <select id="duration" name="duration" required>
+                                <option value="">Select Duration</option>
+                                <option value="1">1 Month</option>
+                                <option value="2">2 Months</option>
+                                <option value="3">3 Months</option>
+                                <option value="6">6 Months</option>
+                                <option value="12">12 Months</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="startDate">Start Date*</label>
+                            <input type="date" id="startDate" name="startDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">End Date*</label>
+                            <input type="date" id="endDate" name="endDate" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="stipend">Stipend (₹ per month)*</label>
+                            <input type="number" id="stipend" name="stipend" placeholder="e.g., 10000" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="openings">Number of Openings*</label>
+                            <input type="number" id="openings" name="openings" placeholder="e.g., 15" min="1" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="deadline">Application Deadline*</label>
+                        <input type="date" id="deadline" name="deadline" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Job Description*</label>
+                        <textarea id="description" name="description" placeholder="Describe the internship..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="skills">Required Skills*</label>
+                        <textarea id="skills" name="skills" placeholder="e.g., SEO, WordPress" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="companyLogo">Company Logo (Optional)</label>
+                        <input type="file" id="companyLogo" name="companyLogo" accept="image/*">
+                    </div>
+
+                    <button type="submit" class="btn-post">Post Internship</button>
+                </form>
+            </section>
+
+
+        <!-- Manage Internships Section -->
+        <section id="manage-internships" class="dashboard-section">
+            <h2>Manage Internships</h2>
+            <div class="internship-list" id="internshipList">
+                <!-- Internship cards will be injected here by JavaScript -->
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        fetch('/internship_bp/')
+                            .then(response => response.json())
+                            .then(internships => {
+                                console.log("Data from endpoint:", internships);
+                                const list = document.getElementById("internshipList");
+                                if (!internships.length) {
+                                    list.innerHTML = '<p class="text-muted">No internships posted yet.</p>';
+                                    return;
+                                }
+                                internships.forEach(i => {
+                                    const card = document.createElement("div");
+                                    card.className = "internship-card mb-3";
+                                    card.dataset.id = i.internship_id;
+                                    card.innerHTML = `
+                   <div class="card-header d-flex justify-content-between">
+                     <h3 class="internship-title">${i.title}</h3>
+                     <span class="status-badge status-accepted">Active</span>
+                   </div>
+                   <div class="card-body">
+                     <p><strong>Location:</strong> ${i.location}</p>
+                     <p><strong>Duration:</strong> ${i.duration} Month(s)</p>
+                     <p><strong>Stipend:</strong> ₹${i.stipend}/month</p>
+                     <p><strong>Openings:</strong> ${i.openings}</p>
+                     <p><strong>Deadline:</strong> ${i.deadline}</p>
+                     <div class="actions mt-2">
+                       <button class="btn btn-sm btn-primary btn-edit" data-id="${i.internship_id}" data-bs-toggle="modal" data-bs-target="#editInternshipModal">Edit</button>
+                       <button class="btn btn-sm btn-danger btn-delete" data-id="${i.internship_id}">Delete</button>
+                     </div>
+                   </div>`;
+                                    list.appendChild(card);
+                                });
+                                attachEditListeners();
+                                attachDeleteListeners();
+                            })
+                            .catch(error => {
+                                console.error("Error loading internships:", error);
+                            });
+                    });
+                </script>
+            </div>
+
+            <!-- Edit Internship Modal -->
+        <div class="modal fade" id="editInternshipModal" tabindex="-1" aria-labelledby="editInternshipModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editInternshipModalLabel">Edit Internship</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editInternshipForm">
+                            <input type="hidden" id="edit-internship-id">
+                            <div class="form-row d-flex gap-3">
+                                <div class="form-group flex-fill">
+                                    <label for="edit-title">Internship Title*</label>
+                                    <input type="text" id="edit-title" class="form-control" readonly required>
+                                </div>
+                                <div class="form-group flex-fill">
+                                    <label for="edit-company">Company Name*</label>
+                                    <input type="text" id="edit-company" class="form-control" readonly required>
+                                </div>
+                            </div>
+                            <div class="form-row d-flex gap-3">
+                                <div class="form-group flex-fill">
+                                    <label for="edit-department">Department*</label>
+                                    <select id="edit-department" class="form-control" readonly required>
+                                        <option value="engineering">Engineering</option>
+                                        <option value="design">Design</option>
+                                        <option value="marketing">Marketing</option>
+                                        <option value="sales">Sales</option>
+                                        <option value="hr">Human Resources</option>
+                                        <option value="finance">Finance</option>
+                                        <option value="content">Content</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group flex-fill">
+                                    <label for="edit-internship-type">Internship Type*</label>
+                                    <select id="edit-internship-type" class="form-control" readonly required>
+                                        <option value="remote-paid">Remote, Paid</option>
+                                        <option value="remote-unpaid">Remote, Unpaid</option>
+                                        <option value="onsite-paid">Onsite, Paid</option>
+                                        <option value="onsite-unpaid">Onsite, Unpaid</option>
+                                        <option value="hybrid-paid">Hybrid, Paid</option>
+                                        <option value="hybrid-unpaid">Hybrid, Unpaid</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row d-flex gap-3">
+                                <div class="form-group flex-fill">
+                                    <label for="edit-location">Location*</label>
+                                    <input type="text" id="edit-location" class="form-control" readonly required>
+                                </div>
+                                <div class="form-group flex-fill">
+                                    <label for="edit-duration">Duration (Months)*</label>
+                                    <select id="edit-duration" class="form-control" required>
+                                        <option value="1">1 Month</option>
+                                        <option value="2">2 Months</option>
+                                        <option value="3">3 Months</option>
+                                        <option value="6">6 Months</option>
+                                        <option value="12">12 Months</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row d-flex gap-3">
+                                <div class="form-group flex-fill">
+                                    <label for="edit-start-date">Start Date*</label>
+                                    <input type="date" id="edit-start-date" class="form-control" required>
+                                </div>
+                                <div class="form-group flex-fill">
+                                    <label for="edit-end-date">End Date*</label>
+                                    <input type="date" id="edit-end-date" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-row d-flex gap-3">
+                                <div class="form-group flex-fill">
+                                    <label for="edit-deadline">Application Deadline*</label>
+                                    <input type="date" id="edit-deadline" class="form-control" required>
+                                </div>
+                                <div class="form-group flex-fill">
+                                    <label for="edit-stipend">Stipend (₹ per month)*</label>
+                                    <input type="number" id="edit-stipend" class="form-control" min="0" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-openings">Number of Openings*</label>
+                                <input type="number" id="edit-openings" class="form-control" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-description">Job Description*</label>
+                                <textarea id="edit-description" class="form-control" rows="4" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-skills">Required Skills*</label>
+                                <textarea id="edit-skills" class="form-control" rows="4" required></textarea>
+                            </div>
+                            <button type="submit" class="btn-save">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Applications Section -->
+        <section id="applications" class="dashboard-section">
+            <h2>Applications</h2>
+            <table class="applications-table" id="applications-table">
+                <thead>
+                    <tr>
+                        <th>Applicant</th>
+                        <th>Position</th>
+                        <th>Applied On</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="applications-tbody">
+                    <tr>
+                        <td colspan="5">Loading applications...</td>
+                    </tr>
+                </tbody>
+            </table>
+        
+            <!-- View Application Modal -->
+            <div class="modal fade" id="viewApplicationModal" tabindex="-1"
+                 aria-labelledby="viewApplicationModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="viewApplicationModalLabel">Applicant Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p><strong>Name:</strong> <span id="view-name"></span></p>
+                            <p><strong>Position:</strong> <span id="view-position"></span></p>
+                            <p><strong>Applied On:</strong> <span id="view-applied"></span></p>
+                            <p><strong>Email:</strong> <span id="view-email"></span></p>
+                            <p><strong>Resume:</strong> <a href="#" id="view-resume" target="_blank">Download Resume</a></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Settings Section -->
+        <section id="settings" class="dashboard-section">
+            <h2>Account Settings</h2>
+            <form class="settings-form" method="POST" id="updatePasswordForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" value="{{ recruiter_info.email }}" readonly>
+                </div>
+            <div class="form-group">
+                <label for="current-password">Current Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="current-password" name="current_password" placeholder="Enter current password" required>
+                    <i class="fas fa-eye password-toggle" data-target="current-password"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="new-password">New Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="new-password" name="new_password" placeholder="Enter new password" required>
+                    <i class="fas fa-eye password-toggle" data-target="new-password"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">Confirm New Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="confirm-password" name="confirm_password" placeholder="Confirm new password" required>
+                    <i class="fas fa-eye password-toggle" data-target="confirm-password"></i>
+                </div></div>
+                <button type="submit" class="btn-save">Save Changes</button>
+
+            <!-- <div class="form-group"><label for="notifications-preference">Notification
+                    Preferences</label><select id="notifications-preference">
+                    <option value="all">All Notifications
+                    </option>
+                    <option value="important">Important Only
+                    </option>
+                    <option value="none">None</option> -->
+        </form>
+    </section>
+    </div>
+</div>
+
+<!-- Back to Top Button -->
+<button id="back-to-top" aria-label="Back to top">
+    <i class="fas fa-chevron-up"></i>
+</button>
+
+<!-- Mobile Sidebar Toggle -->
+<button class="sidebar-toggle-mobile" id="sidebarToggleMobile">
+    <i class="fas fa-bars"></i>
+</button>
+
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+<!-- Custom JavaScript -->
+<script src="main.js"></script> <!-- Ensure this file includes the setupApplicantFetching function -->
+<script>
+    // Inline script for internship management (can be moved to main.js if preferred)
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch('/internship_bp/')
+            .then(response => response.json())
+            .then(internships => {
+                console.log("Data from endpoint:", internships);
+                const list = document.getElementById("internshipList");
+                if (!internships.length) {
+                    list.innerHTML = '<p class="text-muted">No internships posted yet.</p>';
+                    return;
+                }
+                internships.forEach(i => {
+                    const card = document.createElement("div");
+                    card.className = "internship-card mb-3";
+                    card.dataset.id = i.internship_id;
+                    card.innerHTML = `
+                       <div class="card-header d-flex justify-content-between">
+                         <h3 class="internship-title">${i.title}</h3>
+                         <span class="status-badge status-accepted">Active</span>
+                       </div>
+                       <div class="card-body">
+                         <p><strong>Location:</strong> ${i.location}</p>
+                         <p><strong>Duration:</strong> ${i.duration} Month(s)</p>
+                         <p><strong>Stipend:</strong> ₹${i.stipend}/month</p>
+                         <p><strong>Openings:</strong> ${i.openings}</p>
+                         <p><strong>Deadline:</strong> ${i.deadline}</p>
+                         <div class="actions mt-2">
+                           <button class="btn btn-sm btn-primary btn-edit" data-id="${i.internship_id}" data-bs-toggle="modal" data-bs-target="#editInternshipModal">Edit</button>
+                           <button class="btn btn-sm btn-danger btn-delete" data-id="${i.internship_id}">Delete</button>
+                         </div>
+                       </div>`;
+                    list.appendChild(card);
+                });
+                // Add edit and delete listeners here if not in main.js
+            })
+            .catch(error => {
+                console.error("Error loading internships:", error);
+            });
+    });
+</script>
+
+<!-- FOOTER SECTION -->
+<footer class="footer">
+    <div class="footer-container">
+        <!-- About Us Section -->
+        <div class="footer-section about-us">
+            <h3>About Us</h3>
+            <p>We are dedicated to connecting talented college students with top companies offering exciting
+                internship opportunities. Our mission is to help students gain real-world experience and kickstart
+                their
+                careers.
+            </p>
+        </div>
+
+        <!-- Quick Links Section -->
+        <div class="footer-section quick-links">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="internships.html">Internships</a></li>
+                <li><a href="about_us.html">About Us</a></li>
+                <li><a href="contact_us.html">Contact</a></li>
+                <li><a href="index.html#faq-section">FAQ</a></li>
+            </ul>
+        </div>
+
+        <!-- Contact Info Section -->
+        <div class="footer-section contact-info">
+            <h3>Contact Us</h3>
+            <p>Email: <a href="mailto:info@internshiphub.com">info@internshiphub.com</a></p>
+            <p>Phone: +1 (123) 456-7890</p>
+            <p>Address: 123 Internship Lane, Career City</p>
+            <div class="social-icons">
+                <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="footer-bottom">
+        <p>© 2025 InternshipHub. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    // Initialize AOS
+    AOS.init();
+
+    // Sidebar Toggle - Fixed to properly close the sidebar
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebarToggleMobile = document.getElementById('sidebarToggleMobile');
+    const sidebarReopen = document.getElementById('sidebarReopen');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    function toggleSidebar() {
+        sidebar.classList.toggle('collapsed');
+        mainContent.classList.toggle('expanded');
+
+        // Show/hide the reopen button
+        if (sidebar.classList.contains('collapsed')) {
+            sidebarReopen.classList.add('show');
+        } else {
+            sidebarReopen.classList.remove('show');
+        }
+
+        // For mobile view
+        if (window.innerWidth <= 992) {
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+        }
+    }
+
+    function openSidebar() {
+        sidebar.classList.remove('collapsed');
+        mainContent.classList.remove('expanded');
+        sidebarReopen.classList.remove('show');
+
+        if (window.innerWidth <= 992) {
+            sidebar.classList.add('active');
+            sidebarOverlay.classList.add('active');
+        }
+    }
+
+    sidebarToggle.addEventListener('click', toggleSidebar);
+    sidebarToggleMobile.addEventListener('click', toggleSidebar);
+    sidebarReopen.addEventListener('click', openSidebar);
+
+    // Close sidebar when clicking on overlay
+    sidebarOverlay.addEventListener('click', function () {
+        sidebar.classList.remove('active');
+        sidebarOverlay.classList.remove('active');
+
+        if (window.innerWidth <= 992) {
+            sidebar.classList.add('collapsed');
+            mainContent.classList.add('expanded');
+            sidebarReopen.classList.add('show');
+        }
+    });
+
+    // Back to Top Button
+    const backToTopButton = document.getElementById('back-to-top');
+
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+            backToTopButton.classList.add('show');
+        } else {
+            backToTopButton.classList.remove('show');
+        }
+    });
+
+    backToTopButton.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    // Dark Mode Toggle
+    const darkModeToggle = document.getElementById('darkModeToggle');
+
+    // Check for saved theme preference or prefer-color-scheme
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    const savedTheme = localStorage.getItem('theme');
+
+    // If the user has explicitly chosen a theme, use that
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        darkModeToggle.checked = true;
+    } else if (savedTheme === 'light') {
+        document.body.classList.remove('dark-mode');
+        darkModeToggle.checked = false;
+    } else if (prefersDarkScheme.matches) {
+        // If no saved preference, use the system preference
+        document.body.classList.add('dark-mode');
+        darkModeToggle.checked = true;
+    }
+
+    // Add toggle event listener
+    darkModeToggle.addEventListener('change', function () {
+        if (this.checked) {
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.body.classList.remove('dark-mode');
+            localStorage.setItem('theme', 'light');
+        }
+    });
+
+    // Logout functionality
+    document.getElementById('logout-link').addEventListener('click', function (e) {
+        e.preventDefault();
+
+        Swal.fire({
+            title: '<div class="float-icon"><i class="fas fa-sign-out-alt"></i></div>Logout Confirmation',
+            html: '<div class="custom-swal-content">Are you sure you want to logout?</div>',
+            icon: null,
+            showCancelButton: true,
+            confirmButtonColor: '#ff4d4d',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, Logout',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                container: 'custom-swal-container',
+                popup: 'custom-swal-popup',
+                title: 'custom-swal-title'
+            },
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown animate__faster'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutUp animate__faster'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Logging out...',
+                    html: 'Please wait while we log you out.',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                }).then(() => {
+                    Swal.fire({
+                        title: 'Logged Out Successfully!',
+                        text: 'Thank you for using our service. See you soon!',
+                        icon: 'success',
+                        confirmButtonText: 'Back to Home',
+                        confirmButtonColor: '#4776E6',
+                        timer: 3000,
+                        timerProgressBar: true
+                    }).then(() => {
+                        window.location.href = 'index.html';
+                    });
+                });
+            }
+        });
+    });
+
+    // Active menu item
+    const sidebarLinks = document.querySelectorAll('.sidebar-menu a');
+    const sections = document.querySelectorAll('.dashboard-section');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+
+            if (pageYOffset >= (sectionTop - 200)) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        sidebarLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').substring(1) === current) {
+                link.classList.add('active');
+            }
+        });
+    });
+
+    // Responsive adjustments
+    function handleResize() {
+        if (window.innerWidth > 992) {
+            sidebar.classList.remove('collapsed');
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+            mainContent.classList.remove('expanded');
+            sidebarReopen.classList.remove('show');
+        } else {
+            sidebar.classList.add('collapsed');
+            mainContent.classList.add('expanded');
+            sidebarReopen.classList.add('show');
+        }
+    }
+
+    // Initial call and event listener
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    // Edit Company Profile Modal Handling
+    const editCompanyModal = document.getElementById('editCompanyModal');
+    const editCompanyForm = document.getElementById('editCompanyForm');
+    const companyName = document.getElementById('company-name');
+    const companyLocation = document.getElementById('company-location');
+    const companyWebsite = document.getElementById('company-website');
+    const companyEmail = document.getElementById('company-email');
+    const companyPhone = document.getElementById('company-phone');
+    const companyDescription = document.getElementById('company-description');
+    const companyLogo = document.getElementById('company-logo');
+
+    // Pre-fill form when modal is shown
+    editCompanyModal.addEventListener('show.bs.modal', () => {
+        document.getElementById('edit-name').value = companyName.textContent;
+        document.getElementById('edit-location').value = companyLocation.textContent;
+        document.getElementById('edit-website').value = companyWebsite.textContent;
+        document.getElementById('edit-email').value = companyEmail.textContent;
+        document.getElementById('edit-phone').value = companyPhone.textContent;
+        document.getElementById('edit-description').value = companyDescription.textContent;
+        document.getElementById('edit-logo').value = ''; // Clear file input
+    });
+
+    // Handle form submission
+    editCompanyForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // Get form values
+        const name = document.getElementById('edit-name').value.trim();
+        const location = document.getElementById('edit-location').value.trim();
+        const website = document.getElementById('edit-website').value.trim();
+        const email = document.getElementById('edit-email').value.trim();
+        const phone = document.getElementById('edit-phone').value.trim();
+        const description = document.getElementById('edit-description').value.trim();
+        const logoFile = document.getElementById('edit-logo').files[0];
+
+        // Basic validation
+        if (!name || !location || !website || !email || !phone || !description) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'All text fields are required!',
+            });
+            return;
+        }
+
+        if (!/^\S+@\S+\.\S+$/.test(email)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please enter a valid email address!',
+            });
+            return;
+        }
+
+        if (!/^https?:\/\/.+$/.test(website)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please enter a valid website URL (e.g., http://example.com)!',
+            });
+            return;
+        }
+
+        // Validate logo file (if provided)
+        if (logoFile && !logoFile.type.startsWith('image/')) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please upload a valid image file for the logo!',
+            });
+            return;
+        }
+
+        // Update company details
+        companyName.textContent = name;
+        companyLocation.textContent = location;
+        companyWebsite.textContent = website;
+        companyEmail.textContent = email;
+        companyPhone.textContent = phone;
+        companyDescription.textContent = description;
+
+        // Update logo if a new file was uploaded
+        if (logoFile) {
+            const logoUrl = URL.createObjectURL(logoFile);
+            companyLogo.src = logoUrl;
+        }
+
+        // Close modal
+       // Close the modal
+const modalInstance = bootstrap.Modal.getInstance(editCompanyModal);
+modalInstance.hide();
+
+// Option 1: Reload after modal closes
+window.setTimeout(() => {
+    window.location.reload();
+}, 100);
+
+// OR Option 2: Use Swal and reload after it closes
+Swal.fire({
+    icon: 'success',
+    title: 'Profile Updated',
+    text: 'Your company profile has been successfully updated!',
+    timer: 2000,
+    timerProgressBar: true,
+    showConfirmButton: false,
+    willClose: () => {
+        window.location.reload();
+    }
+});
+    });
+
+    // Post Internship Form Handling
+    const postInternshipForm = document.getElementById('postInternshipForm');
+
+    postInternshipForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // Get form values
+        const title = document.getElementById('title').value.trim();
+        const company = document.getElementById('company').value.trim();
+        const department = document.getElementById('department').value;
+        const location = document.getElementById('location').value.trim();
+        const internshipType = document.getElementById('internshipType').value;
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        const duration = document.getElementById('duration').value;
+        const stipend = document.getElementById('stipend').value;
+        const openings = document.getElementById('openings').value;
+        const deadline = document.getElementById('deadline').value;
+        const description = document.getElementById('description').value.trim();
+        const skills = document.getElementById('skills').value.trim();
+        const perks = document.getElementById('perks').value.trim();
+        const companyLogo = document.getElementById('companyLogo').files[0];
+
+        // Basic validation
+        if (!title || !company || !department || !location || !internshipType || !startDate || !endDate || !duration || !stipend || !openings || !deadline || !description || !skills) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'All required fields must be filled!',
+            });
+            return;
+        }
+
+        const today = new Date().toISOString().split('T')[0];
+        if (startDate < today) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Start date cannot be in the past!',
+            });
+            return;
+        }
+
+        if (endDate <= startDate) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'End date must be after start date!',
+            });
+            return;
+        }
+
+        if (deadline > startDate) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Application deadline must be before start date!',
+            });
+            return;
+        }
+
+        if (companyLogo && !companyLogo.type.startsWith('image/')) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Company logo must be an image file!',
+            });
+            return;
+        }
+
+        // Prepare data for database (example structure)
+        const internshipData = {
+            title,
+            company,
+            department,
+            location,
+            internshipType,
+            startDate,
+            endDate,
+            duration,
+            stipend: Number(stipend),
+            openings: Number(openings),
+            deadline,
+            description,
+            skills,
+            perks: perks || null,
+            companyLogo: companyLogo ? companyLogo.name : null // Store filename or handle file upload separately
+        };
+
+        console.log('Internship Data:', internshipData); // For debugging
+
+        // Simulate database submission (replace with actual backend call)
+        // Example: fetch('/api/post-internship', { method: 'POST', body: JSON.stringify(internshipData) })
+
+        // Reset form
+        postInternshipForm.reset();
+
+        // Show success message
+        Swal.fire({
+            icon: 'success',
+            title: 'Internship Posted',
+            text: `${title} has been successfully posted!`,
+            timer: 2000,
+            timerProgressBar: true,
+        });
+    });
+
+    // Manage Internships: Edit and Delete Functionality
+    const editInternshipModal = document.getElementById('editInternshipModal');
+    const editInternshipForm = document.getElementById('editInternshipForm');
+    const editButtons = document.querySelectorAll('.btn-edit');
+    const deleteButtons = document.querySelectorAll('.btn-delete');
+
+    // Pre-fill edit form when modal is opened
+    editInternshipModal.addEventListener('show.bs.modal', (e) => {
+        const button = e.relatedTarget; // Button that triggered the modal
+        const id = button.getAttribute('data-id');
+        const card = document.querySelector(`.internship-card[data-id="${id}"]`);
+
+        // Pre-fill form with current values
+        document.getElementById('edit-id').value = id;
+        document.getElementById('edit-title').value = card.querySelector('.internship-title').textContent;
+        document.getElementById('edit-location').value = card.querySelector('.internship-location').textContent;
+        document.getElementById('edit-duration').value = card.querySelector('.internship-duration').textContent.split(' ')[0]; // Extract number
+        document.getElementById('edit-stipend').value = parseInt(card.querySelector('.internship-stipend').textContent.replace(/[^0-9]/g, ''));
+        document.getElementById('edit-applications').value = card.querySelector('.internship-applications').textContent;
+        document.getElementById('edit-posted').value = new Date(card.querySelector('.internship-posted').textContent).toISOString().split('T')[0];
+    });
+
+    // Handle edit form submission
+    editInternshipForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const id = document.getElementById('edit-id').value;
+        const card = document.querySelector(`.internship-card[data-id="${id}"]`);
+
+        // Get updated values
+        const title = document.getElementById('edit-title').value.trim();
+        const location = document.getElementById('edit-location').value.trim();
+        const duration = document.getElementById('edit-duration').value;
+        const stipend = document.getElementById('edit-stipend').value;
+        const applications = document.getElementById('edit-applications').value;
+        const posted = document.getElementById('edit-posted').value;
+
+        // Basic validation
+        if (!title || !location || !duration || !stipend || !applications || !posted) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'All fields are required!',
+            });
+            return;
+        }
+
+        // Update card content
+        card.querySelector('.internship-title').textContent = title;
+        card.querySelector('.internship-location').textContent = location;
+        card.querySelector('.internship-duration').textContent = `${duration} Months`;
+        card.querySelector('.internship-stipend').textContent = `₹${Number(stipend).toLocaleString('en-IN')}/month`;
+        card.querySelector('.internship-applications').textContent = applications;
+        card.querySelector('.internship-posted').textContent = new Date(posted).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+
+        // Close modal
+        const modalInstance = bootstrap.Modal.getInstance(editInternshipModal);
+        modalInstance.hide();
+
+        // Show success message
+        Swal.fire({
+            icon: 'success',
+            title: 'Internship Updated',
+            text: `${title} has been successfully updated!`,
+            timer: 2000,
+            timerProgressBar: true,
+        });
+    });
+
+    // Handle delete button clicks
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const id = button.getAttribute('data-id');
+            const card = document.querySelector(`.internship-card[data-id="${id}"]`);
+            const title = card.querySelector('.internship-title').textContent;
+
+            Swal.fire({
+                title: 'Confirm Deletion',
+                text: `Are you sure you want to delete "${title}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, Delete',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    card.style.display = 'none'; // Hide the card
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted',
+                        text: `${title} has been deleted!`,
+                        timer: 1500,
+                        timerProgressBar: true,
+                    });
+                }
+            });
+        });
+    });
+
+    // Applications Section: View, Accept, Reject Functionality
+    const viewApplicationModal = document.getElementById('viewApplicationModal');
+    const tbody = document.getElementById('applications-tbody');
+
+    // Dummy applicant data (expanded for new users)
+    const applicantData = {
+        1: { name: "John Doe", position: "Frontend Developer", applied: "20 Feb 2023", email: "john.doe@example.com", resume: "resume_john.pdf" },
+        2: { name: "Jane Smith", position: "UI/UX Designer", applied: "18 Feb 2023", email: "jane.smith@example.com", resume: "resume_jane.pdf" },
+        3: { name: "Rahul Kumar", position: "Digital Marketing", applied: "15 Feb 2023", email: "rahul.kumar@example.com", resume: "resume_rahul.pdf" },
+        4: { name: "Priya Sharma", position: "Content Writer", applied: "25 Mar 2023", email: "priya.sharma@example.com", resume: "resume_priya.pdf" },
+        5: { name: "Amit Patel", position: "Backend Developer", applied: "10 Mar 2023", email: "amit.patel@example.com", resume: "resume_amit.pdf" },
+        6: { name: "Sneha Gupta", position: "Graphic Designer", applied: "5 Apr 2023", email: "sneha.gupta@example.com", resume: "resume_sneha.pdf" }
+    };
+
+    // Pre-fill view modal
+    viewApplicationModal.addEventListener('show.bs.modal', (e) => {
+        const button = e.relatedTarget;
+        const id = button.getAttribute('data-id');
+        const data = applicantData[id];
+
+        document.getElementById('view-name').textContent = data.name;
+        document.getElementById('view-position').textContent = data.position;
+        document.getElementById('view-applied').textContent = data.applied;
+        document.getElementById('view-email').textContent = data.email;
+        const resumeLink = document.getElementById('view-resume');
+        resumeLink.href = data.resume; // Dummy link
+        resumeLink.textContent = `Download ${data.name}'s Resume`;
+    });
+
+    // Handle Accept button
+    document.querySelectorAll('.btn-accept').forEach(button => {
+        button.addEventListener('click', () => {
+            const id = button.getAttribute('data-id');
+            const row = document.querySelector(`tr[data-id="${id}"]`);
+            const statusCell = row.querySelector('.status-badge');
+            const actionsCell = row.querySelector('td:last-child');
+
+            statusCell.textContent = 'Accepted';
+            statusCell.className = 'status-badge status-accepted';
+            actionsCell.innerHTML = `<button class="btn btn-view" data-bs-toggle="modal" data-bs-target="#viewApplicationModal" data-id="${id}">View</button>`;
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Application Accepted',
+                text: `${row.querySelector('.applicant-name').textContent} has been accepted!`,
+                timer: 1500,
+                timerProgressBar: true,
+            });
+        });
+    });
+
+    // Handle Reject button
+    document.querySelectorAll('.btn-reject').forEach(button => {
+        button.addEventListener('click', () => {
+            const id = button.getAttribute('data-id');
+            const row = document.querySelector(`tr[data-id="${id}"]`);
+            const name = row.querySelector('.applicant-name').textContent;
+
+            Swal.fire({
+                title: 'Confirm Rejection',
+                text: `Are you sure you want to reject ${name}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, Reject',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const statusCell = row.querySelector('.status-badge');
+                    const actionsCell = row.querySelector('td:last-child');
+
+                    statusCell.textContent = 'Rejected';
+                    statusCell.className = 'status-badge status-rejected';
+                    actionsCell.innerHTML = `<button class="btn btn-view" data-bs-toggle="modal" data-bs-target="#viewApplicationModal" data-id="${id}">View</button>`;
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Application Rejected',
+                        text: `${name} has been rejected!`,
+                        timer: 1500,
+                        timerProgressBar: true,
+                    });
+                }
+            });
+        });
+    });
+
+    // Placeholder for real-time user fetching
+    function fetchRealTimeApplications() {
+        // Uncomment and replace with your API endpoint when ready
+        /*
+        fetch('/api/applications')
+            .then(response => response.json())
+            .then(data => {
+                tbody.innerHTML = ''; // Clear existing rows
+                data.forEach(app => {
+                    const row = document.createElement('tr');
+                    row.setAttribute('data-id', app.id);
+                    row.innerHTML = `
+                        <td class="applicant-name">${app.name}</td>
+                        <td class="applicant-position">${app.position}</td>
+                        <td class="applicant-applied">${app.appliedOn}</td>
+                        <td><span class="status-badge status-${app.status.toLowerCase()}">${app.status}</span></td>
+                        <td>
+                            <button class="btn btn-view" data-bs-toggle="modal" data-bs-target="#viewApplicationModal" data-id="${app.id}">View</button>
+                            ${app.status === 'Pending' ? `
+                                <button class="btn btn-accept" data-id="${app.id}">Accept</button>
+                                <button class="btn btn-reject" data-id="${app.id}">Reject</button>
+                            ` : ''}
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+    
+                // Re-attach event listeners after updating DOM
+                attachEventListeners();
+            })
+            .catch(error => {
+                console.error('Error fetching applications:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to load applications!',
+                });
+            });
+        */
+    }
+
+    // Function to attach event listeners (for dynamic rows)
+    function attachEventListeners() {
+        document.querySelectorAll('.btn-accept').forEach(button => {
+            button.addEventListener('click', handleAccept);
+        });
+        document.querySelectorAll('.btn-reject').forEach(button => {
+            button.addEventListener('click', handleReject);
+        });
+    }
+
+    // Extracted handlers for reuse
+    function handleAccept() {
+        const id = this.getAttribute('data-id');
+        const row = document.querySelector(`tr[data-id="${id}"]`);
+        const statusCell = row.querySelector('.status-badge');
+        const actionsCell = row.querySelector('td:last-child');
+
+        statusCell.textContent = 'Accepted';
+        statusCell.className = 'status-badge status-accepted';
+        actionsCell.innerHTML = `<button class="btn btn-view" data-bs-toggle="modal" data-bs-target="#viewApplicationModal" data-id="${id}">View</button>`;
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Application Accepted',
+            text: `${row.querySelector('.applicant-name').textContent} has been accepted!`,
+            timer: 1500,
+            timerProgressBar: true,
+        });
+    }
+
+    function handleReject() {
+        const id = this.getAttribute('data-id');
+        const row = document.querySelector(`tr[data-id="${id}"]`);
+        const name = row.querySelector('.applicant-name').textContent;
+
+        Swal.fire({
+            title: 'Confirm Rejection',
+            text: `Are you sure you want to reject ${name}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, Reject',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const statusCell = row.querySelector('.status-badge');
+                const actionsCell = row.querySelector('td:last-child');
+
+                statusCell.textContent = 'Rejected';
+                statusCell.className = 'status-badge status-rejected';
+                actionsCell.innerHTML = `<button class="btn btn-view" data-bs-toggle="modal" data-bs-target="#viewApplicationModal" data-id="${id}">View</button>`;
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Application Rejected',
+                    text: `${name} has been rejected!`,
+                    timer: 1500,
+                    timerProgressBar: true,
+                });
+            }
+        });
+    }
+
+    // Initial event listeners for static rows
+    attachEventListeners();
+
+    // Call this to fetch real-time data when ready
+    // fetchRealTimeApplications();
+
+</script>
+<script>
+    document.getElementById("postInternshipForm").addEventListener("submit", function (e) {
+        e.preventDefault(); // prevent form default submission
+
+        const formData = new FormData(this);
+
+        fetch("/post", {
+            method: "POST",
+            body: formData,
+        })
+            .then(response => {
+                if (!response.ok) throw new Error("Network error");
+                return response.json();
+            })
+            .then(data => {
+                console.log("Success:", data);
+                Swal.fire("Success", "Internship posted successfully!", "success");
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                Swal.fire("Oops!", "Something went wrong while saving.", "error");
+            });
+    });
+</script>
+
+<script>
+    document.getElementById("postInternshipForm").addEventListener("submit", function (e) {
+        console.log("Form submitted");
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const postForm = document.getElementById('postInternshipForm');
+        const internshipList = document.querySelector('.internship-list');
+
+        // ✅ Fetch and display internships on page load
+        fetch('/internship_bp/')
+            .then(res => res.json())
+            .then(data => {
+                internshipList.innerHTML = '';
+                data.forEach(i => {
+                    internshipList.innerHTML += `
+                        <div class="internship-card" data-id="${i.internship_id}">
+                            <div class="card-header">
+                                <h3 class="internship-title">${i.title}</h3>
+                                <span class="status-badge status-accepted">Active</span>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Location:</strong> ${i.location}</p>
+                                <p><strong>Duration:</strong> ${i.duration} Months</p>
+                                <p><strong>Stipend:</strong> ₹${i.stipend}/month</p>
+                                <p><strong>Deadline:</strong> ${i.deadline}</p>
+                                <div class="actions">
+                                    <button class="btn-edit" onclick="editInternship(${i.internship_id})">Edit</button>
+                                    <button class="btn-delete" onclick="deleteInternship(${i.internship_id})">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+
+        // ✅ Handle posting a new internship
+        postForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(postForm);
+
+            fetch('/internship_bp/post', {
+                method: 'POST',
+                body: formData
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.message) {
+                        Swal.fire("Success", data.message, "success");
+                        postForm.reset();
+                        location.reload();
+                    } else {
+                        Swal.fire("Error", data.error || "Failed to post internship", "error");
+                    }
+                })
+                .catch(() => {
+                    Swal.fire("Error", "Something went wrong!", "error");
+                });
+        });
+    });
+
+    // ✅ Edit internship (fill form for editing)
+    function editInternship(id) {
+        fetch(`/internship_bp/`)
+            .then(res => res.json())
+            .then(data => {
+                const intern = data.find(i => i.internship_id === id);
+                if (!intern) return;
+
+                // Fill the form with data
+                document.getElementById('title').value = intern.title;
+                document.getElementById('company').value = intern.company;
+                document.getElementById('department').value = intern.department;
+                document.getElementById('location').value = intern.location;
+                document.getElementById('internshipType').value = intern.internship_type;
+                document.getElementById('startDate').value = intern.start_date;
+                document.getElementById('endDate').value = intern.end_date;
+                document.getElementById('duration').value = intern.duration;
+                document.getElementById('stipend').value = intern.stipend;
+                document.getElementById('openings').value = intern.openings;
+                document.getElementById('deadline').value = intern.deadline;
+                document.getElementById('description').value = intern.description;
+                document.getElementById('skills').value = intern.skills;
+
+                // Change submit to update
+                const form = document.getElementById('postInternshipForm');
+                const submitBtn = form.querySelector('.btn-post');
+                submitBtn.textContent = 'Update Internship';
+
+                form.onsubmit = function (e) {
+                    e.preventDefault();
+                    const data = {
+                        title: form.title.value,
+                        company: form.company.value,
+                        department: form.department.value,
+                        location: form.location.value,
+                        internship_type: form.internshipType.value,
+                        start_date: form.startDate.value,
+                        end_date: form.endDate.value,
+                        duration: form.duration.value,
+                        stipend: form.stipend.value,
+                        openings: form.openings.value,
+                        deadline: form.deadline.value,
+                        description: form.description.value,
+                        skills: form.skills.value
+                    };
+
+                    fetch(`/internship_bp/internships/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    })
+                        .then(res => res.json())
+                        .then(result => {
+                            if (result.message) {
+                                Swal.fire("Updated!", result.message, "success");
+                                form.reset();
+                                location.reload();
+                            } else {
+                                Swal.fire("Error", result.error || "Update failed", "error");
+                            }
+                        });
+                };
+            });
+    }
+
+    // ✅ Delete internship
+    function deleteInternship(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'This will permanently delete the internship.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!'
+        }).then(result => {
+            if (result.isConfirmed) {
+                fetch(`/internship_bp/internships/${id}`, {
+                    method: 'DELETE'
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.message) {
+                            Swal.fire("Deleted!", data.message, "success");
+                            location.reload();
+                        } else {
+                            Swal.fire("Error", data.error || "Delete failed", "error");
+                        }
+                    });
+            }
+        });
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function attachEditListeners() {
+        document.querySelectorAll(".btn-edit").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                const id = btn.dataset.id;
+                fetch(`/internship/${id}`)  // ✅ corrected path
+                    .then((res) => res.json())
+                    .then((data) => {
+                        document.getElementById("edit-id").value = data.internship_id;
+                        document.getElementById("edit-title").value = data.title;
+                        document.getElementById("edit-location").value = data.location;
+                        document.getElementById("edit-duration").value = data.duration;
+                        document.getElementById("edit-stipend").value = data.stipend;
+                        document.getElementById("edit-openings").value = data.openings;
+                        document.getElementById("edit-deadline").value = data.deadline;
+                        document.getElementById("edit-description").value = data.description;
+                        document.getElementById("edit-skills").value = data.skills;
+                    })
+                    .catch((error) => {
+                        console.error("Error loading internship details for editing:", error);
+                    });
+            });
+        });
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const viewButtons = document.querySelectorAll('.btn-view');
+        const nameSpan = document.getElementById('view-name');
+        const positionSpan = document.getElementById('view-position');
+        const appliedSpan = document.getElementById('view-applied');
+        const emailSpan = document.getElementById('view-email');
+        const resumeLink = document.getElementById('view-resume');
+
+        viewButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                nameSpan.textContent = btn.getAttribute('data-name');
+                positionSpan.textContent = btn.getAttribute('data-position');
+                appliedSpan.textContent = btn.getAttribute('data-applied');
+                emailSpan.textContent = btn.getAttribute('data-email');
+                resumeLink.href = btn.getAttribute('data-resume');
+            });
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tbody = document.getElementById('applications-tbody');
+        const viewButtons = document.querySelectorAll('.btn-view');
+        const nameSpan = document.getElementById('view-name');
+        const positionSpan = document.getElementById('view-position');
+        const appliedSpan = document.getElementById('view-applied');
+        const emailSpan = document.getElementById('view-email');
+        const resumeLink = document.getElementById('view-resume');
+
+        // Function to populate the table
+        function updateApplications() {
+            fetch('/api/applications')
+                .then(response => response.json())
+                .then(applications => {
+                    tbody.innerHTML = ''; // Clear existing rows
+                    if (!applications.length) {
+                        tbody.innerHTML = '<tr><td colspan="5">No applications found.</td></tr>';
+                        return;
+                    }
+                    applications.forEach(app => {
+                        const row = document.createElement('tr');
+                        row.setAttribute('data-id', app.application_id);
+                        row.innerHTML = `
+                                <td class="applicant-name">${app.full_name}</td>
+                                <td class="applicant-position">${app.title}</td>
+                                <td class="applicant-applied">${app.created_at.split(' ')[0]}</td>
+                                <td><span class="status-badge status-${app.status.toLowerCase()}">${app.status}</span></td>
+                                <td>
+                                    <button class="btn btn-view" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#viewApplicationModal"
+                                            data-name="${app.full_name}"
+                                            data-position="${app.title}"
+                                            data-applied="${app.created_at.split(' ')[0]}"
+                                            data-email="${app.email}"
+                                            data-resume="${url_for('static', filename = 'applications/' + app.resume) || ''}">
+                                        View
+                                    </button>
+                                    ${app.status === "Pending" ? `
+                                        <form method="POST" action="${url_for('recruiter_bp.update_application_status')}" style="display:inline;">
+                                            <input type="hidden" name="application_id" value="${app.application_id}">
+                                            <button class="btn btn-accept" name="status" value="Accepted">Accept</button>
+                                            <button class="btn btn-reject" name="status" value="Rejected">Reject</button>
+                                        </form>
+                                    ` : ''}
+                                </td>
+                            `;
+                        tbody.appendChild(row);
+                    });
+
+                    // Re-attach event listeners for new view buttons
+                    document.querySelectorAll('.btn-view').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            nameSpan.textContent = btn.getAttribute('data-name');
+                            positionSpan.textContent = btn.getAttribute('data-position');
+                            appliedSpan.textContent = btn.getAttribute('data-applied');
+                            emailSpan.textContent = btn.getAttribute('data-email');
+                            resumeLink.href = btn.getAttribute('data-resume');
+                            resumeLink.textContent = btn.getAttribute('data-resume') ? 'Download Resume' : 'No Resume';
+                        });
+                    });
+                })
+                .catch(error => console.error('Error fetching applications:', error));
+        }
+
+        // Initial load
+        // updateApplications();
+
+        // // Poll for updates every 30 seconds (adjust as needed)
+        // setInterval(updateApplications, 30000);
+
+        // Handle Accept and Reject (already implemented in existing script, no change needed)
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const tbody = document.getElementById("applications-tbody");
+    
+        fetch("/api/applications")
+            .then(res => res.json())
+            .then(applications => {
+                tbody.innerHTML = "";
+    
+                if (!applications.length) {
+                    tbody.innerHTML = "<tr><td colspan='5'>No applications found.</td></tr>";
+                    return;
+                }
+    
+                applications.forEach(app => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${app.full_name}</td>
+                        <td>${app.title}</td>
+                        <td>${app.created_at.split(" ")[0]}</td>
+                        <td><span class="status-badge status-${app.status.toLowerCase()}">${app.status}</span></td>
+                        <td>
+                            <button class="btn btn-view" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#viewApplicationModal"
+                                    data-name="${app.full_name}"
+                                    data-position="${app.title}"
+                                    data-applied="${app.created_at.split(" ")[0]}"
+                                    data-email="${app.email}"
+                                    data-resume="${app.resume ? '/static/applications/' + app.resume : ''}">
+                                View
+                            </button>
+    
+                            ${app.status === "Pending" ? `
+                            <form method="POST" action="/update_application_status" style="display:inline;">
+                                <input type="hidden" name="application_id" value="${app.application_id}">
+                                <button class="btn btn-accept" name="status" value="Accepted">Accept</button>
+                                <button class="btn btn-reject" name="status" value="Rejected">Reject</button>
+                            </form>` : ""}
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+    
+                // View Modal population
+                document.querySelectorAll(".btn-view").forEach(button => {
+                    button.addEventListener("click", () => {
+                        document.getElementById("view-name").innerText = button.dataset.name;
+                        document.getElementById("view-position").innerText = button.dataset.position;
+                        document.getElementById("view-applied").innerText = button.dataset.applied;
+                        document.getElementById("view-email").innerText = button.dataset.email;
+    
+                        const resumeLink = document.getElementById("view-resume");
+                        resumeLink.href = button.dataset.resume;
+                        resumeLink.style.display = button.dataset.resume ? "inline" : "none";
+                    });
+                });
+            })
+            .catch(err => {
+                console.error("❌ Error fetching applications:", err);
+                tbody.innerHTML = "<tr><td colspan='5'>Error loading applications</td></tr>";
+            });
+    });
+    </script>
+    <!-- // ✅ JS code to load recruiter profile info
+    // Add this at the bottom of recruiter.html or in script.js -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Function to load profile data
+            function loadProfile() {
+                console.log("🔍 Fetching recruiter profile from /api/recruiter_profile");
+                fetch("/api/recruiter_profile")
+                    .then(res => {
+                        console.log(`🔍 Response status: ${res.status}`);
+                        if (!res.ok) {
+                            throw new Error(`HTTP error! status: ${res.status}`);
+                        }
+                        return res.json();
+                    })
+                    .then(data => {
+                        console.log("🔍 Profile data received:", data);
+                        if (data.error) {
+                            console.error("❌ Server returned error:", data.error);
+                            Swal.fire("Error", data.error, "error");
+                            return;
+                        }
+    
+                        // Update profile display
+                        const fields = [
+                            { id: "company-name", value: data.company_name || 'N/A' },
+                            { id: "company-email", value: data.email || 'N/A' },
+                            { id: "company-location", value: data.location || 'N/A' },
+                            { id: "company-website", value: data.website || 'N/A' },
+                            { id: "company-phone", value: data.phone || 'N/A' },
+                            { id: "company-description", value: data.description || 'N/A' }
+                        ];
+                        fields.forEach(field => {
+                            const element = document.getElementById(field.id);
+                            if (element) {
+                                element.innerText = field.value;
+                            } else {
+                                console.error(`❌ Element not found: ${field.id}`);
+                            }
+                        });
+    
+                        // Update logo
+                        const logoImg = document.getElementById("company-logo");
+                        if (logoImg) {
+                            const logoUrl = data.logo ? `/static/uploads/${data.logo}?t=${new Date().getTime()}` : '/static/images/default_logo.png';
+                            console.log(`🔍 Setting logo URL: ${logoUrl}`);
+                            logoImg.src = logoUrl;
+                            logoImg.onerror = () => {
+                                console.error(`❌ Failed to load logo: ${logoUrl}`);
+                                logoImg.src = '/static/images/default_logo.png';
+                            };
+                        } else {
+                            console.error("❌ company-logo element not found");
+                        }
+    
+                        // Update modal inputs
+                        const inputFields = [
+                            { id: "edit-name", value: data.company_name || '' },
+                            { id: "edit-email", value: data.email || '' },
+                            { id: "edit-location", value: data.location || '' },
+                            { id: "edit-website", value: data.website || '' },
+                            { id: "edit-phone", value: data.phone || '' },
+                            { id: "edit-description", value: data.description || '' }
+                        ];
+                        inputFields.forEach(field => {
+                            const element = document.getElementById(field.id);
+                            if (element) {
+                                element.value = field.value;
+                                if (field.id === "edit-email") element.readOnly = true;
+                            } else {
+                                console.error(`❌ Input element not found: ${field.id}`);
+                            }
+                        });
+    
+                        // Restore page state
+                        document.body.classList.remove("modal-open");
+                        document.body.style.overflow = "auto";
+                        console.log("🔍 Restored page scroll and visibility");
+                    })
+                    .catch(error => {
+                        console.error("❌ Error fetching recruiter profile:", error);
+                        Swal.fire("Error", "Failed to load profile data: " + error.message, "error");
+                    });
+            }
+    
+            // Initial load
+            loadProfile();
+    
+            // Handle form submission
+            const editForm = document.getElementById("editCompanyForm");
+            if (editForm) {
+                editForm.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    console.log("🔍 Submitting profile update");
+    
+                    const formData = new FormData();
+                    const fields = [
+                        { id: "edit-name", key: "company_name" },
+                        { id: "edit-email", key: "email" },
+                        { id: "edit-location", key: "location" },
+                        { id: "edit-website", key: "website" },
+                        { id: "edit-phone", key: "phone" },
+                        { id: "edit-description", key: "description" }
+                    ];
+                    fields.forEach(field => {
+                        const element = document.getElementById(field.id);
+                        if (element) {
+                            formData.append(field.key, element.value);
+                        } else {
+                            console.error(`❌ Form input not found: ${field.id}`);
+                        }
+                    });
+    
+                    const logoInput = document.getElementById("edit-logo");
+                    if (logoInput) {
+                        const logo = logoInput.files[0];
+                        if (logo) {
+                            console.log("🔍 Logo file selected:", logo.name);
+                            formData.append("logo", logo);
+                        } else {
+                            console.log("🔍 No logo file selected");
+                        }
+                    } else {
+                        console.error("❌ edit-logo input not found");
+                    }
+    
+                    try {
+                        const response = await fetch("/api/recruiter_profile", {
+                            method: "POST",
+                            body: formData
+                        });
+                        const result = await response.json();
+                        console.log("🔍 POST response:", result);
+                        if (result.success) {
+                            Swal.fire({
+                                title: "Success",
+                                text: "Profile updated successfully.",
+                                icon: "success",
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                // Close the modal
+                                const modal = document.getElementById("editCompanyModal");
+                                if (modal) {
+                                    const bsModal = bootstrap.Modal.getInstance(modal);
+                                    if (bsModal) {
+                                        bsModal.hide();
+                                        console.log("🔍 Modal closed");
+                                    } else {
+                                        console.warn("🔍 Bootstrap modal instance not found");
+                                        modal.classList.remove("show");
+                                        modal.style.display = "none";
+                                    }
+                                    // Remove modal backdrop
+                                    const backdrop = document.querySelector(".modal-backdrop");
+                                    if (backdrop) {
+                                        backdrop.remove();
+                                        console.log("🔍 Modal backdrop removed");
+                                    }
+                                    // Ensure body is restored
+                                    document.body.classList.remove("modal-open");
+                                    document.body.style.overflow = "auto";
+                                    console.log("🔍 Restored body state");
+                                } else {
+                                    console.error("❌ editCompanyModal not found");
+                                }
+                                // Refresh profile data with slight delay
+                                setTimeout(() => {
+                                    loadProfile();
+                                }, 100);
+                            });
+                            // Reset file input
+                            if (logoInput) logoInput.value = "";
+                        } else {
+                            console.error("❌ Server error:", result.error);
+                            Swal.fire("Error", result.error || "Failed to update profile.", "error");
+                        }
+                    } catch (error) {
+                        console.error("❌ Error updating profile:", error);
+                        Swal.fire("Error", "Failed to update profile: " + error.message, "error");
+                    }
+                });
+            } else {
+                console.error("❌ editCompanyForm not found");
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.querySelectorAll('.password-toggle').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const targetId = toggle.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    toggle.classList.remove('fa-eye');
+                    toggle.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    toggle.classList.remove('fa-eye-slash');
+                    toggle.classList.add('fa-eye');
+                }
+            });
+        });
+document.getElementById('updatePasswordForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const currentPassword = document.getElementById('current-password').value;
+    const newPassword = document.getElementById('new-password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+
+    // Client-side validation
+    if (!currentPassword || !newPassword || !confirmPassword) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'All fields are required!',
+        });
+        return;
+    }
+
+    if (newPassword !== confirmPassword) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'New password and confirm password do not match!',
+        });
+        return;
+    }
+
+    // Validate password strength
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'New password must be at least 8 characters and include 1 uppercase letter, 1 number, and 1 special symbol!',
+        });
+        return;
+    }
+
+    try {
+        const formData = new FormData();
+        formData.append('current_password', currentPassword);
+        formData.append('new_password', newPassword);
+        formData.append('confirm_password', confirmPassword);
+
+        const response = await fetch('/auth/update_password_company', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: result.message,
+                timer: 2000,
+                timerProgressBar: true
+            });
+            document.getElementById('updatePasswordForm').reset();
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: result.error || 'Failed to update password.',
+            });
+        }
+    } catch (error) {
+        console.error('Error updating password:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An unexpected error occurred. Please try again.',
+        });
+    }
+});
+
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("editCompanyForm").addEventListener("submit", async function (e) {
+                e.preventDefault();
+        
+                const formData = new FormData(this);
+                const response = await fetch("/api/recruiter_profile", {
+                    method: "POST",
+                    body: formData
+                });
+        
+                const result = await response.json();
+        
+                if (result.success) {
+                    const newName = document.getElementById("edit-name").value;
+                    const newLocation = document.getElementById("edit-location").value;
+        
+                    // ✅ Update Post Internship section
+                    const postCompany = document.getElementById("company");
+                    const postLocation = document.getElementById("location");
+        
+                    if (postCompany) postCompany.value = newName;
+                    if (postLocation) postLocation.value = newLocation;
+        
+                    // ✅ Update Company Profile display
+                    document.getElementById("company-name").textContent = newName;
+                    document.getElementById("company-location").textContent = newLocation;
+        
+                    // ✅ Close the modal
+                    const modalEl = document.getElementById("editCompanyModal");
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    modal.hide();
+        
+                    Swal.fire("Updated!", "Company profile updated successfully.", "success");
+                } else {
+                    Swal.fire("Error", result.error || "Failed to update. Try again.", "error");
+                }
+            });
+        });
+        </script>
+        
+    
+</body>
+
+</html>

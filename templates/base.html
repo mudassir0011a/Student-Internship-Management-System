@@ -1,0 +1,11 @@
+<head>
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+</head>
+<div class="d-flex align-items-center">
+    <a href="#" id="dashboard-link" class="btn btn-dashboard me-2 d-none">Dashboard</a>
+    <a href="{{ url_for('auth_bp.logout') }}" id="logout-link" class="btn btn-logout d-none">Logout</a>
+    <a href="{{ url_for('main.login') }}" id="login-link" class="btn btn-login">Login</a>
+    <a href="{{ url_for('auth_bp.candidate_signup') }}" id="candidate-signup" class="btn btn-signup ms-2">Candidate's Signup</a>
+    <a href="{{ url_for('auth_bp.company_signup') }}" id="company-signup" class="btn btn-signup ms-2">Company's Signup</a>
+</div>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>

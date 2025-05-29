@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InternshipHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark_mode.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --primary: #4a4e69;
+            /* Desaturated indigo for a sophisticated look */
+            --secondary: #9a8c98;
+            /* Muted mauve for softer accents */
+            --background: #f7ede2;
+            /* Light beige for a warm aesthetic */
+            --text: #22223b;
+            /* Dark blue-gray for contrast */
+            --highlight: #c9ada7;
+            /* Rose beige for highlights */
+            --light: #ffffff;
+            /* Crisp white for clean sections */
+            --dark: #2a2a2a;
+            /* Dark gray for secondary elements */
+            --accent: #f4a261;
+            /* Soft orange for CTAs or highlights */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            /* White background */
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            color: black;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links li {
+            display: inline;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            font-size: 16px;
+            padding: 8px 12px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover,
+        .active {
+            color: black;
+            font-weight: bold;
+        }
+
+        /* Search Section */
+        .search-section {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 0 20px;
+        }
+
+        .search-section input,
+        select,
+        button {
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .search-section button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .search-section button:hover {
+            background: var(--primary);
+        }
+
+        /* Job Cards Section */
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .job-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .company-logo img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .job-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .job-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .tags {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .tag-green {
+            background-color: #E7F9F0;
+            color: #18A957;
+        }
+
+        .tag-blue {
+            background-color: #E8F1FF;
+            color: #2D7FF9;
+        }
+
+        .tag-pink {
+            background-color: #FFE8EC;
+            color: #FF385C;
+        }
+
+        .button-group {
+            text-align: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary);
+        }
+
+        /* ======================= */
+        /* Responsive Design */
+        /* ======================= */
+        @media (max-width: 768px) {
+
+            .navbar-links,
+            .auth-buttons {
+                display: flex;
+                flex-direction: column;
+                /* Stack items vertically */
+                align-items: flex-start;
+                /* Align items to the left */
+            }
+
+            .navbar-links a,
+            .auth-buttons a {
+                margin: 0.5rem 0;
+                /* Add spacing between stacked items */
+            }
+
+            .footer-content {
+                flex-direction: column;
+                /* Stack footer sections vertically */
+            }
+
+            .footer-section {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+        }
+
+        /* Footer Styles */
+        .footer {
+            background-color: var(--primary);
+            /* Blue background */
+            color: #ffffff;
+            /* White text */
+            padding: 2rem 1rem;
+            font-family: Arial, sans-serif;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-section {
+            flex: 1 1 300px;
+            margin: 1rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            font-size: 0.9rem;
+            color: #f0f0f0;
+            line-height: 1.6;
+            text-decoration: none;
+        }
+
+        .footer-section a:hover {
+            color: #d1e0ff;
+            /* Light blue hover */
+            text-decoration: underline;
+        }
+
+        /* Quick Links */
+        .quick-links ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .quick-links ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 0.9em;
+            margin-right: 10.6rem;
+            margin-top: 0.1rem;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            /* Ensures icons stay centered vertically */
+            align-items: center;
+            justify-content: center;
+            color: var(--light);
+            /* Icon color */
+            font-size: 1.5rem;
+            /* Adjust icon size */
+            width: 2.5rem;
+            /* Set width for a circular shape */
+            height: 2.5rem;
+            /* Set height for a circular shape */
+            border-radius: 50%;
+            /* Make the icon background circular */
+            background-color: rgba(255, 255, 255, 0.1);
+            /* Light background for icons */
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background-color: var(--highlight);
+            /* Change background on hover */
+            color: white;
+            /* Change icon color on hover */
+        }
+
+        /* Footer Bottom */
+        .footer-bottom {
+            text-align: center;
+            padding: 1rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-section {
+                margin: 1rem 0;
+            }
+        }
+
+
+
+        img {
+            border: 2px solid #5574ff;
+            border-radius: 50%;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background-color: var(--primary);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            color: var(--light);
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .navbar-brand:hover {
+            color: var(--highlight);
+        }
+
+        .navbar-links a {
+            color: var(--light);
+            text-decoration: none;
+            margin: 0 1rem;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .navbar-links a:hover {
+            color: var(--highlight);
+        }
+
+        .navbar-links a.active {
+            background-color: #ffd166;
+            color: var(--primary);
+            /* Text color */
+            padding: 8px 16px;
+            /* Add some padding */
+            border-radius: 8px;
+            /* Make the background rounded */
+            font-weight: bold;
+            /* Highlight the text */
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .navbar-links a.active:hover {
+            background-color: #ffc04c;
+            /* Slightly darker shade for hover */
+            transform: scale(1.1);
+            /* Slight zoom effect */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            /* Add a subtle shadow */
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--primary);
+            padding: 15px 30px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: default;
+            transition: color 0.3s ease;
+            color: white;
+        }
+
+        .logo:hover {
+            color: black;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links li {
+            display: inline;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--background);
+        }
+
+        .nav-links .active {
+            font-weight: bold;
+            /* border-bottom: 2px solid #4A90E2; */
+        }
+
+        /* Logout Button */
+        .btn-logout {
+            background-color: var(--highlight);
+            color: #4A90E2 !important;
+            padding: 0.6rem 1.3rem !important;
+            border-radius: 5rem;
+            text-decoration: none;
+            font-weight: lighter;
+            border: 1px solid #4A90E2;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background-color: white;
+            color: #4A90E2;
+        }
+
+        /* Hide elements dynamically */
+        .d-none {
+            display: none;
+        }
+
+        .nav-link {
+            color: var(--light);
+            font-size: 1rem;
+            margin-right: 1rem;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .nav-link:hover {
+            color: var(--highlight);
+        }
+
+        .nav-link.active {
+            background-color: var(--highlight);
+            color: var(--primary);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--highlight);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        #login-link {
+            position: relative;
+            left: -2rem;
+        }
+
+        #login-link {
+            background-color: var(--highlight);
+            /* Keep the original background */
+            /* color: #4A90E2; */
+            /* Text color */
+            padding: 0.4rem 1.3rem;
+            border-radius: 5rem;
+            text-decoration: none;
+            font-weight: lighter;
+            /* border: 2px solid #4A90E2; */
+            /* Adding border for a better hover effect */
+            transition: all 0.3s ease;
+        }
+
+        #login-link:hover {
+            background-color: white !important;
+            /* Background becomes white on hover */
+            color: #4A90E2 !important;
+            /* Text remains the same */
+            border: 2px solid #4A90E2;
+            /* Border remains */
+            border-radius: 5rem;
+            padding: 0.4rem 1.3rem;
+        }
+
+        .btn-dashboard {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.4rem 1.3rem;
+            border-radius: 5rem;
+            text-decoration: none;
+            font-weight: lighter;
+        }
+
+        .btn-dashboard:hover {
+            background-color: #0056b3;
+            color: var(--background);
+        }
+
+        .btn-logout {
+            background-color: var(--highlight);
+            /* Keep the original background */
+            color: var(--primary) !important;
+            /* Text color */
+            padding: 0.4rem 1.3rem;
+            border-radius: 5rem;
+            text-decoration: none;
+            font-weight: lighter;
+            border: None !important;
+            /* Adding border for a better hover effect */
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background-color: transparent;
+            /* Background becomes white on hover */
+            color: white !important;
+            /* Text remains the same */
+            border: 2px solid #4A90E2;
+            /* Border remains */
+            border-radius: 5rem;
+            padding: 0.4rem 1.3rem;
+        }
+
+        /* * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f2f5;
+            padding: 20px;
+        } */
+
+        .container2_banner {
+            width: 100%;
+            /* max-width: 1200px; */
+        }
+
+        .search-container {
+            background: var(--background);
+            /* box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1); */
+            overflow: hidden;
+        }
+
+        .banner {
+            position: relative;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 60px 40px;
+            overflow: hidden;
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            color: var(--highlight);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.8s ease-out forwards;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            animation: slideUp 0.8s ease-out 0.2s forwards;
+        }
+
+        /* Search Section Styles */
+        .search-section {
+            padding: 30px;
+            background: var(--background);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 80%;
+            /* Adjust width as needed */
+            max-width: 900px;
+            /* Keeps the form responsive */
+            margin: 0 auto;
+            /* Centers it horizontally */
+        }
+
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px !important;
+            /* Force it to move right */
+            left: auto !important;
+            /* Override left positioning */
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px 50px 16px 20px;
+            /* Add space on the right for the icon */
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #6366F1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .filters-wrapper {
+            display: flex;
+            justify-content: center;
+            /* Centers the filters */
+            flex-wrap: wrap;
+            /* Keeps them responsive */
+            gap: 15px;
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            pointer-events: none;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 16px 20px 16px 50px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: var(--background);
+            appearance: none;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") no-repeat;
+            background-position: right 15px center;
+            background-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #6366F1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .search-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #6366F1, #A855F7);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .search-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .search-button i {
+            transition: transform 0.3s ease;
+        }
+
+        .search-button:hover i {
+            transform: translateX(5px);
+        }
+
+        .highlight {
+            color: #ffd166;
+            font-weight: bold;
+            /* Optional for emphasis */
+        }
+
+
+        /* Animated Shapes */
+        .animated-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.15;
+            animation: float 20s infinite;
+        }
+
+        .circle {
+            border-radius: 50%;
+            background: white;
+            left: 10%;
+        }
+
+        .square {
+            width: 80px;
+            height: 80px;
+            background: white;
+            top: 60%;
+            right: 10%;
+            animation-delay: -5s;
+        }
+
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 86px solid white;
+            top: 30%;
+            right: 20%;
+            animation-delay: -10s;
+        }
+
+        .diamond {
+            width: 60px;
+            height: 60px;
+            background: white;
+            transform: rotate(45deg);
+            top: 70%;
+            left: 20%;
+            animation-delay: -15s;
+        }
+
+        /* Animations */
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            25% {
+                transform: translate(20px, -20px) rotate(90deg);
+            }
+
+            50% {
+                transform: translate(0, 20px) rotate(180deg);
+            }
+
+            75% {
+                transform: translate(-20px, -20px) rotate(270deg);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .banner {
+                padding: 40px 20px;
+            }
+
+            .title {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .search-section {
+                padding: 20px;
+            }
+
+            .filters-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.5rem;
+            }
+
+            .search-button {
+                width: 100%;
+            }
+        }
+
+        .nav-link.active {
+            background-color: transparent !important;
+            color: var(--highlight);
+            font-weight: bold;
+        }
+
+        .btn-login,
+        .btn-signup {
+            border: 1px solid white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: white;
+            background: transparent;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .btn-login:hover,
+        .btn-signup:hover {
+            background-color: white;
+            color: #6b8cff;
+        }
+
+        .btn-dashboard {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.4rem 1.3rem;
+            border-radius: 5rem;
+            text-decoration: none;
+        }
+
+        .btn-dashboard:hover {
+            background-color: var(--secondary);
+            color: var (--background);
+        }
+
+        .btn-logout {
+            background-color: #c9ada7;
+            color: black;
+            padding: 0.4rem 1.2rem;
+            border-radius: 5rem;
+            text-decoration: none;
+        }
+
+        .btn-logout:hover {
+            background-color: var(--primary);
+            color: var(--background);
+            border: 1px solid #c9ada7 !important;
+        }
+
+        .navbar-brand:hover {
+            color: var(--highlight);
+        }
+
+        /* ✅ Login Button: Left to Right Fill on Click */
+        #login-link {
+            position: relative;
+            overflow: hidden;
+            transition: color 0.4s ease-in-out;
+        }
+
+        #login-link::before {
+            content: "";
+            position: absolute;
+            left: -100%;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            transition: left 0.4s ease-in-out;
+            z-index: -1;
+        }
+
+        #login-link:active::before {
+            left: 0;
+        }
+
+        #login-link:active {
+            color: white;
+        }
+
+        /* ✅ Signup Button: Bottom to Top Fill on Click */
+        #signup-link {
+            position: relative;
+            overflow: hidden;
+            transition: color 0.4s ease-in-out;
+        }
+
+        #signup-link::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -100%;
+            width: 100%;
+            height: 100%;
+            background: #c9ada7;
+            transition: bottom 0.4s ease-in-out;
+            z-index: -1;
+        }
+
+        #signup-link:active::before {
+            bottom: 0;
+        }
+
+        #signup-link:active {
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+            margin-left: 10px;
+        }
+
+        .btn-secondary:hover {
+            background-color: darken(var(--secondary), 10%);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid white;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: darken(var(--primary), 10%);
+            color: #18A957;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+            margin-left: 10px;
+        }
+
+        .btn-secondary:hover {
+            background-color: darken(var(--secondary), 10%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            color: #2D7FF9;
+        }
+
+        /* Responsive Navbar Adjustments */
+        @media (max-width: 600px) {
+            nav.navbar {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            nav.navbar ul.nav-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+        }
+
+        /* Responsive Footer Adjustments */
+        @media (max-width: 600px) {
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-section {
+                margin: 1rem 0;
+            }
+        }
+
+        /* Responsive Navbar Adjustments */
+        nav.navbar {
+            flex-wrap: wrap;
+        }
+
+        nav.navbar ul.nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            position: relative;
+            top: 10px;
+        }
+
+        /* Responsive Search Section */
+        .search-section {
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            gap: 15px;
+        }
+
+        .search-section input,
+        .search-section button,
+        .search-section select {
+            width: 100%;
+            max-width: none;
+        }
+
+        /* Additional Media Queries */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 10px 20px;
+            }
+
+            .nav-links a {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Minimalistic Dark Footer */
+        .footer.dark-mode {
+            background-color: #1a1a1a;
+            /* Dark background */
+            color: #f0f0f0;
+            /* Light text */
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            /* Subtle top border */
+        }
+
+        .footer-section.dark-mode h3 {
+            color: #ffffff;
+            /* White heading */
+            font-weight: 600;
+            /* Bold headings */
+        }
+
+        .footer-section.dark-mode p,
+        .footer-section.dark-mode a {
+            color: #d1d1d1;
+            /* Light gray text */
+            transition: color 0.3s ease;
+            /* Smooth hover effect */
+        }
+
+        .footer-section.dark-mode a:hover {
+            color: #6b8cff;
+            /* Highlight color on hover */
+            text-decoration: none;
+            /* Remove underline */
+        }
+
+        .social-icons.dark-mode a {
+            background-color: rgba(255, 255, 255, 0.1);
+            /* Subtle icon background */
+            color: #f0f0f0;
+            /* Light icon color */
+            transition: background-color 0.3s ease, color 0.3s ease;
+            /* Smooth transitions */
+        }
+
+        .social-icons.dark-mode a:hover {
+            background-color: #6b8cff;
+            /* Highlight background on hover */
+            color: #ffffff;
+            /* White icon color on hover */
+        }
+
+        .footer-bottom.dark-mode {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            /* Subtle top border */
+            color: #d1d1d1;
+            /* Light gray text */
+            padding-top: 1rem;
+            /* Spacing */
+        }
+
+        /* Dark mode overrides */
+        body.dark-mode .search-section {
+            background-color: #2c2c2c;
+            color: #f1f1f1;
+            border: 1px solid #555;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode .search-section input,
+        body.dark-mode .search-section select,
+        body.dark-mode .search-section button {
+            background-color: #424242;
+            color: #f1f1f1;
+            border: 1px solid #666;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode .search-section button {
+            background: #4a90e2;
+            border: none;
+            cursor: pointer;
+        }
+
+        body.dark-mode .search-section button:hover {
+            background: #357ab8;
+        }
+
+        body.dark-mode .search-container {
+            background-color: #1f1f1f;
+            color: #f1f1f1;
+            border: 1px solid #555;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        body {
+            padding-top: 60px;
+            /* Navbar ki height jitni space */
+        }
+
+        .login-message {
+            color: white;
+            background-color: #ff4d4d;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            margin: 20px auto;
+            width: 50%;
+        }
+
+        /* Hide scrollbar for Chrome, Safari, and Edge */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for Firefox */
+        html {
+            scrollbar-width: none;
+        }
+
+        /* Hide scrollbar for IE, Edge, and older versions */
+        body {
+            -ms-overflow-style: none;
+        }
+
+        /* Custom Scrollbar for Chrome, Safari, Edge */
+        ::-webkit-scrollbar {
+            width: 8px;
+            /* Thoda slim scrollbar */
+        }
+
+        /* Scrollbar ka background */
+        ::-webkit-scrollbar-track {
+            background: var(--background);
+            /* Light beige tone */
+            border-radius: 10px;
+        }
+
+        /* Scrollbar ka moving part (thumb) */
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            /* Indigo color */
+            border-radius: 10px;
+            border: 2px solid var(--background);
+        }
+
+        /* Hover Effect */
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+            /* Soft orange hover effect */
+        }
+
+        /* Firefox ke liye */
+        html {
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--background);
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const role = urlParams.get("role");
+
+            if (role) {
+                document.getElementById("roleHeading").textContent = `Internships for "${role}"`;
+            }
+
+            const internships = [
+                { title: "Software Engineer Intern", company: "Google", location: "Mountain View, CA" },
+                { title: "Data Analyst Intern", company: "Amazon", location: "Seattle, WA" },
+                { title: "Marketing Intern", company: "Facebook", location: "Remote" },
+                { title: "Graphic Designer Intern", company: "Adobe", location: "San Francisco, CA" },
+                { title: "UI/UX Designer Intern", company: "Apple", location: "Cupertino, CA" },
+                { title: "Web Developer Intern", company: "Microsoft", location: "Redmond, WA" },
+                { title: "Data Analyst ", company: "Tesla", location: "Palo Alto, CA" },
+                { title: "Content Writer Intern", company: "Medium", location: "Remote" }
+            ];
+
+            if (role) {
+                const filteredInternships = internships.filter(intern =>
+                    intern.title.toLowerCase().includes(role.toLowerCase())
+                );
+
+                const internshipList = document.getElementById("internshipList");
+                internshipList.innerHTML = filteredInternships.map(intern => `
+                    <div class="job-card">
+                        <h3>${intern.title}</h3>
+                        <p>Company: ${intern.company}</p>
+                        <p>Location: ${intern.location}</p>
+                    </div>
+                `).join("");
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.apply-now-btn').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    fetch('/api/check_login_status')
+                        .then(response => response.json())
+                        .then(data => {
+                            if (!data.logged_in) {
+                                Swal.fire({
+                                    title: 'Please Log In',
+                                    text: 'You must be logged in to apply for an internship.',
+                                    icon: 'warning'
+                                });
+                            } else if (data.role === 'recruiter') {
+                                Swal.fire({
+                                    title: 'Access Denied',
+                                    text: 'Recruiters cannot apply for internships.',
+                                    icon: 'error'
+                                });
+                            } else if (data.role === 'student') {
+                                // Hide any existing login messages before redirecting
+                                document.querySelector('.login-message')?.classList.add('d-none');
+                                Swal.close(); // Ensure any active alerts are closed
+                                window.location.href = btn.getAttribute('href');
+                            }
+                        })
+                        .catch(error => console.error("Error checking login status:", error));
+                });
+            });
+        });
+    </script>
+
+</head>
+
+<body>
+    <nav class="navbar">
+        <a class="navbar-brand" href="#"> <i class="fas fa-laptop-code"></i> <span>InternshipHub</span></a>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('home') }}" class="nav-link">Home</a></li>
+            <li><a href="{{ url_for('internships') }}" class="active nav-link">Internships</a></li>
+            <li><a href="{{ url_for('about_us') }}" class="nav-link">About Us</a></li>
+            <li><a href="{{ url_for('contact_us') }}" class="nav-link">Contact Us</a></li>
+        </ul>
+        <div class="d-flex align-items-center">
+            <a href="{{ url_for('dashboard') }}" id="dashboard-link" class="btn btn-dashboard me-2 d-none">Dashboard</a>
+            <a href="{{ url_for('auth_bp.logout') }}" id="logout-link" class="btn btn-logout d-none">Logout</a>
+            <a href="{{ url_for('main.login') }}" id="login-link" class="btn btn-login">Login</a>
+            <a href="{{ url_for('auth_bp.candidate_signup') }}" id="candidate-signup"
+                class="btn btn-signup ms-2">Candidate's Signup</a>
+            <a href="{{ url_for('auth_bp.company_signup') }}" id="company-signup" class="btn btn-signup ms-2">Company's
+                Signup</a>
+        </div>
+        <!-- Updated Dark Mode Toggle -->
+        <div class="dark-mode-toggle">
+            <input type="checkbox" id="darkModeToggle">
+            <label for="darkModeToggle" class="dark-mode-label">
+                <div class="circle">
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z" />
+                    </svg>
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.7-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </label>
+        </div>
+    </nav>
+
+    <div class="container2_banner">
+        <div class="search-container">
+            <div class="banner">
+                <div class="content">
+                    <h1 class="title">Explore Exciting Internship Opportunities</h1>
+                    <p class="subtitle">
+                        Here are the <span class="highlight">latest opportunities</span>, and many more are <span
+                            class="highlight">on the
+                            way</span> 😎
+                    </p>
+                </div>
+                <div class="animated-shapes">
+                    <div class="shape circle"></div>
+                    <div class="shape square"></div>
+                    <div class="shape triangle"></div>
+                    <div class="shape diamond"></div>
+                </div>
+            </div>
+
+            <!-- Search Section -->
+            <div class="search-section">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" placeholder="Search for internships..." class="search-input">
+                </div>
+
+                <div class="filters-wrapper">
+                    <!-- <div class="select-wrapper">
+                        <i class="fas fa-industry"></i>
+                        <select class="filter-select">
+                            <option value="" disabled selected>Browse by Industry</option>
+                            <option value="software">Software Development</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="finance">Finance</option>
+                            <option value="design">Design</option>
+                            <option value="data">Data Science</option>
+                            <option value="hr">Human Resources</option>
+                        </select>
+                    </div> -->
+
+                    <!-- <div class="select-wrapper">
+                        <i class="fas fa-location-dot"></i>
+                        <select class="filter-select">
+                            <option value="" disabled selected>Select Location &nbsp; &nbsp; &nbsp;</option>
+                            <option value="mumbai">Mumbai</option>
+                            <option value="bangalore">Bangalore</option>
+                            <option value="hyderabad">Hyderabad</option>
+                            <option value="pune">Pune</option>
+                            <option value="remote">Remote</option>
+                        </select>
+                    </div>
+
+                    <div class="select-wrapper">
+                        <i class="fas fa-clock"></i>
+                        <select class="filter-select">
+                            <option value="" disabled selected>Internship Duration &nbsp; &nbsp; &nbsp;</option>
+                            <option value="1">1 Month</option>
+                            <option value="2">2 Months</option>
+                            <option value="3">3 Months</option>
+                            <option value="6">6 Months</option>
+                            <option value="12">12 Months</option>
+                        </select>
+                    </div> -->
+                </div>
+
+                <button class="search-button">
+                    <span>Search</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        {% for internship in internships %}
+        <div class="job-card">
+            <div class="card-header">
+                <div class="company-logo">
+                    <img src="{{ url_for('static', filename='uploads/' ~ internship.company_logo if internship.company_logo else 'images/default.png') }}"
+                        alt="{{ internship.company }} Logo">
+                </div>
+            </div>
+            <div class="job-content">
+                <h2 class="job-title">{{ internship.title }}</h2>
+                <p class="job-description">{{ internship.description[:100] }}...</p>
+                <div class="tags">
+                    <span class="tag tag-green location">{{ internship.location }}</span>
+                    <span class="tag tag-blue internship_type">{{ internship.internship_type }}</span>
+                    <span class="tag tag-pink duration">{{ internship.duration }} Months</span>
+                </div>
+                <div class="button-group">
+                    <a href="/apply/{{ internship.internship_id }}" class="btn btn-primary apply-check"
+                        data-internship-id="{{ internship.internship_id }}">
+                        Apply Now
+                    </a>
+
+
+                    <a href="{{ url_for('view_internship', internship_id=internship.internship_id) }}"
+                        class="btn btn-secondary">View More Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- About Us Section -->
+            <div class="footer-section about-us">
+                <h3>About Us</h3>
+                <p>We are dedicated to connecting talented college students with top companies offering exciting
+                    internship
+                    opportunities. Our mission is to help students gain real-world experience and kickstart their
+                    careers.
+                </p>
+            </div>
+
+            <!-- Quick Links Section -->
+            <div class="footer-section quick-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="internships.html">Internships</a></li>
+                    <li><a href="about_us.html">About Us</a></li>
+                    <li><a href="contact_us.html">Contact</a></li>
+                    <li><a href="index.html#faq-section">FAQ</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Info Section -->
+            <div class="footer-section contact-info">
+                <h3>Contact Us</h3>
+                <p>Email: <a href="mailto:info@internshiphub.com">info@internshiphub.com</a></p>
+                <p>Phone: +1 (123) 456-7890</p>
+                <p>Address: 123 Internship Lane, Career City</p>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/InternshipHub" target="_blank"><i
+                            class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.twitter.com/InternshipHub" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/InternshipHub" target="_blank"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/InternshipHub" target="_blank"><i
+                            class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="footer-bottom">
+            <p>&copy; 2025 InternshipHub. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+
+    <!-- Add this script block to hide signup buttons when logged in -->
+    <!-- Existing scripts -->
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (localStorage.getItem("isLoggedIn") === "true") {
+                document.getElementById("candidate-signup")?.classList.add("d-none");
+                document.getElementById("company-signup")?.classList.add("d-none");
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const applyButtons = document.querySelectorAll('.apply-check');
+
+            applyButtons.forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    // Get internship ID
+                    const internshipId = btn.getAttribute('data-internship-id');
+
+                    // Get email from session using backend endpoint
+                    fetch('/api/check_login_status')
+                        .then(res => res.json())
+                        .then(user => {
+                            if (!user.logged_in || user.role !== 'student') {
+                                Swal.fire("Please Login", "Only students can apply.", "warning");
+                                return;
+                            }
+
+                            const email = user.email;
+
+                            // Now check if this user already applied
+                            fetch(`/apply/check_application_status?email=${email}&internship_id=${internshipId}`)
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.hasApplied) {
+                                        // Show status message
+                                        let statusMsg = '';
+                                        if (data.status === 'Pending') {
+                                            statusMsg = "You have already applied. Your application is under review.";
+                                        } else if (data.status === 'Accepted') {
+                                            statusMsg = "🎉 You’ve already been accepted for this internship!";
+                                        } else if (data.status === 'Rejected') {
+                                            statusMsg = "Unfortunately, you were not selected. Feel free to explore other opportunities!";
+                                        }
+
+                                        Swal.fire({
+                                            icon: 'info',
+                                            title: 'Application Status',
+                                            text: statusMsg
+                                        });
+                                    } else {
+                                        // Not applied, allow navigation
+                                        window.location.href = btn.href;
+                                    }
+                                })
+                                .catch(() => {
+                                    Swal.fire("Oops!", "Error checking application status.", "error");
+                                });
+                        });
+                });
+            });
+        });
+    </script>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/internship_page.js') }}"></script>
+    <!-- Updated Cloudflare Script -->
+    <script>
+        (function () {
+            function injectChallengeScript() {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                if (iframeDoc) {
+                    const script = iframeDoc.createElement('script');
+                    script.innerHTML = `
+                        window.__CF$cv$params = {
+                            r: '933499777f247bdb',
+                            t: 'MTc0NTE1MTY2NS4wMDAwMDA='
+                        };
+                        var a = document.createElement('script');
+                        a.nonce = '';
+                        a.src = '/cdn-cgi/challenge-platform/scripts/jsd/main.js';
+                        document.getElementsByTagName('head')[0].appendChild(a);
+                    `;
+                    iframeDoc.getElementsByTagName('head')[0].appendChild(script);
+                }
+            }
+
+            const iframe = document.createElement('iframe');
+            iframe.height = 1;
+            iframe.width = 1;
+            iframe.style.position = 'absolute';
+            iframe.style.top = '0';
+            iframe.style.left = '0';
+            iframe.style.border = 'none';
+            iframe.style.visibility = 'hidden';
+
+            if (document.body) {
+                document.body.appendChild(iframe);
+                if (document.readyState !== 'loading') {
+                    injectChallengeScript();
+                } else if (window.addEventListener) {
+                    document.addEventListener('DOMContentLoaded', injectChallengeScript);
+                } else {
+                    const originalOnReadyStateChange = document.onreadystatechange || function () { };
+                    document.onreadystatechange = function (event) {
+                        originalOnReadyStateChange(event);
+                        if (document.readyState !== 'loading') {
+                            document.onreadystatechange = originalOnReadyStateChange;
+                            injectChallengeScript();
+                        }
+                    };
+                }
+            }
+        })();
+    </script>
+</body>
+
+</html>

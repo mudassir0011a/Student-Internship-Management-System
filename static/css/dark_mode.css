@@ -1,0 +1,113 @@
+#darkModeToggle { display: none; }
+
+/* Toggle Label & Container */
+.dark-mode-label {
+    display: inline-block;
+    width: 60px;         /* reduced from 400px */
+    height: 30px;        /* reduced from 200px */
+    border-radius: 15px; /* half of height */
+    background: #F3F3F3;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.05) inset;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
+/* Circle Switch */
+.circle {
+    width: 26px;       /* reduced size */
+    height: 26px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.05), -2px -2px 5px rgba(0,0,0,0.05) inset;
+    position: absolute;
+    top: 50%;
+    left: 2px;         /* small left margin */
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: left 0.3s, background 0.3s, box-shadow 0.3s;
+}
+
+/* SVG Icons inside circle */
+.circle svg {
+    width: 16px;       /* smaller icons */
+    position: absolute;
+    transition: opacity 0.3s, transform 0.3s;
+}
+.sun { color: #FFD600; transform: translateY(0);  opacity: 1; }
+.moon { color: white;   transform: translateY(-150%);  opacity: 0; }
+
+/* Fix SVG icon sizing in the dark mode toggle for internships.html */
+.dark-mode-toggle .dark-mode-label .circle svg {
+  width: 16px;     /* adjusted from 24px */
+  height: 16px;    /* adjusted from 24px */
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Optional: add spacing between the sun and moon icons */
+.dark-mode-toggle .dark-mode-label .circle svg + svg {
+  margin-left: 5px;
+}
+
+/* Dark Mode Activated */
+#darkModeToggle:checked + .dark-mode-label {
+    background: #1F1F21;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2) inset;
+}
+#darkModeToggle:checked + .dark-mode-label .circle {
+    left: calc(100% - 28px); /* 60px - (26px + 2px) */
+    background: #2C2C2F;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2), -2px -2px 5px rgba(0,0,0,0.2) inset;
+}
+#darkModeToggle:checked + .dark-mode-label .circle .sun {
+    transform: translateY(150%);
+    opacity: 0;
+}
+#darkModeToggle:checked + .dark-mode-label .circle .moon {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Active & Hover Effects */
+label:active .circle { width: 30px; }
+.dark-mode-label .circle:hover {
+    border: 1px solid #ccc;
+    border-radius: 50%;
+}
+
+/* Dark Body Styling */
+body.dark-mode {
+    background-color: #1F1F21;
+    color: #ffffff;
+}
+body.dark-mode .navbar {
+    background-color: #2c2c2f;
+    color: #ffffff;
+}
+body.dark-mode .nav-link {
+    color: #ffffff !important;
+}
+body.dark-mode .navbar-brand {
+    color: #ffffff;
+}
+body.dark-mode .btn {
+    background-color: #6b8aff;
+    color: #ffffff;
+}
+
+.dark-mode {
+	background-color: #121212;
+	color: #ffffff;
+}
+
+body.dark-mode a {
+	color: #bb86fc;
+}
+
+body.dark-mode .navbar {
+	background-color: #333333;
+}

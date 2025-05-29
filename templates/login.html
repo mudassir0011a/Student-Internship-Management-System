@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <style>
+        .success-message {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            animation: fadeOut 3s forwards;
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                display: none;
+            }
+        }
+
+        /* Styling for the signup button in overlay */
+        .overlay-right {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .signup-btn {
+            background-color: #4a4e69;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            width: 150px;
+            border: 1px solid #9a8c98;
+            border-radius: 15rem;
+            text-align: center;
+        }
+
+        .signup-btn:hover {
+            background-color: #9a8c98;
+            border: 1px solid #4a4e69;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="main">
+        <div class="success-message">✅ Login successful! Welcome back.</div>
+
+        <!-- Login Section -->
+        <div id="login-section">
+            <div class="sign-in">
+                <form class="login-form" id="loginForm" method="POST" action="{{ url_for('auth_bp.login') }}">
+                    <h1>Sign In</h1>
+                    <input type="email" id="email" name="email" placeholder="Email" required>
+                    <div class="password-container">
+                        <input type="password" id="password" name="password" placeholder="Password" required>
+                        <i class="fas fa-eye toggle-password"></i>
+                    </div>
+                    <select id="role" name="role" required>
+                        <option value="" disabled selected>Select Role</option>
+                        <option value="student">Student</option>
+                        <option value="recruiter">Recruiter</option>
+                    </select>
+                    <a href="#">Forgot your Password?</a>
+                    <button class="login_btn" type="submit">Login</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Overlay Container -->
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-left">
+                    <h1>Welcome Back!</h1>
+                    <p>To keep connected with us please login with your personal info</p>
+                    <button id="signIn">Login</button>
+                </div>
+                <div class="overlay-right">
+                    <h1>Hello, Friend!</h1>
+                    <p>Enter your personal details and start your journey with us</p>
+                    <a href="#" id="signup-btn" class="signup-btn">Sign Up</a>
+                    <a href="{{ url_for('main.index') }}" class="signup-btn">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const signupBtn = document.getElementById("signup-btn");
+
+            signupBtn.addEventListener("click", function (e) {
+                e.preventDefault(); // Prevent default anchor behavior
+
+                Swal.fire({
+                    title: "Select Role to Sign Up",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "Signup as a Student",
+                    cancelButtonText: "Signup as a Recruiter",
+                    customClass: {
+                        popup: 'animated fadeInDown'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "{{ url_for('auth_bp.candidate_signup') }}";
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        window.location.href = "{{ url_for('auth_bp.company_signup') }}";
+                    }
+                });
+            });
+        });
+    </script>
+    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'92e30164df94adcc',t:'MTc0NDI5NjA5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
+</html>

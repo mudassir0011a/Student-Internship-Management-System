@@ -1,0 +1,187 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 24px;
+            display: flex;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            min-height: 500px;
+        }
+
+        .registration-side {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .registration-side h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 32px;
+        }
+
+        .registration-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 16px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .input-group input::placeholder {
+            color: #888;
+        }
+
+        .register-btn {
+            background: #9a8c98;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .register-btn:hover {
+            background: rgb(56, 52, 56);
+        }
+
+        .welcome-side {
+            background: #9a8c98;
+            width: 45%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: white;
+            text-align: center;
+            border-top-left-radius: 50px;
+            border-bottom-left-radius: 50px;
+
+        }
+
+        .welcome-content h2 {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .welcome-content p {
+            margin-bottom: 24px;
+            opacity: 0.9;
+        }
+
+        .login-btn {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background: white;
+            color: rgb(56, 52, 56);
+            font-weight: 900;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                flex-direction: column-reverse;
+            }
+
+            .welcome-side {
+                width: 100%;
+                border-radius: 0;
+                padding: 60px 24px;
+            }
+
+            .registration-side {
+                padding: 32px 24px;
+            }
+        }
+
+                /* Style for the password toggle icon */
+                #togglePassword {
+                    cursor: pointer;
+                    position: absolute;
+                    right: 10px;
+                    /* Adjust based on your input field's width */
+                    top: 50%;
+                    /* Vertically center */
+                    transform: translateY(-50%);
+                    font-size: 1.2rem;
+                    /* Icon size */
+                    color: #888;
+                    /* Default icon color */
+                }
+        
+                /* Optional hover effect for the toggle icon */
+                #togglePassword:hover {
+                    color: #555;
+                    /* Darker color on hover */
+                }
+
+                /* Ensure the container is positioned relative */
+                .password-container {
+                    position: relative;
+                }
+
+                /* Increase right padding on the password field for the eye icon */
+                .password-container .form-control {
+                    padding-right: 48px; /* increased space */
+                }
+
+                /* Adjust the toggle icon positioning */
+                .password-container .toggle-password {
+                    position: absolute;
+                    right: 12px;       /* tweak as needed */
+                    top: 50%;
+                    transform: translateY(-50%);
+                    cursor: pointer;
+                    font-size: 1.2rem;
+                    color: #666;
+                    z-index: 2;        /* ensure it appears above the input */
+                }
+
+                /* Responsive tweaks */
+                @media (max-width: 576px) {
+                    .password-container .toggle-password {
+                        right: 8px;
+                        font-size: 1rem;
+                    }
+                }

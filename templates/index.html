@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>InternshipHub</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dark_mode.css') }}">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <meta name="description"
+    content="InternshipHub connects students with top companies offering exciting internship opportunities.">
+  <meta name="keywords" content="internships, jobs, career, students, recruitment">
+  <!-- Load SweetAlert2 with defer so that it is parsed before your custom scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+  <style>
+    .d-none {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <div id="navbar">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="#"> <i class="fas fa-laptop-code"></i> <span>InternshipHub</span></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item"><a class="nav-link active" href="{{ url_for('home') }}">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('internships') }}">Internships</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('about_us') }}">About Us</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('contact_us') }}">Contact Us</a></li>
+          </ul>
+          <div class="d-flex align-items-center">
+            <a href="{{ url_for('dashboard') }}" id="dashboard-link" class="btn btn-dashboard me-2 d-none">Dashboard</a>
+            <a href="{{ url_for('auth_bp.logout') }}" id="logout-link" class="btn btn-logout d-none">Logout</a>
+            <a href="{{ url_for('main.login') }}" id="login-link" class="btn btn-login">Login</a>
+            <a href="{{ url_for('auth_bp.candidate_signup') }}" id="candidate-signup"
+              class="btn btn-signup ms-2">Candidate's
+              Signup</a>
+            <a href="{{ url_for('auth_bp.company_signup') }}" id="company-signup" class="btn btn-signup ms-2">Company's
+              Signup</a>
+          </div>
+        </div>
+      </div>
+      <!-- Updated Dark Mode Toggle -->
+      <div class="dark-mode-toggle">
+        <input type="checkbox" id="darkModeToggle">
+        <label for="darkModeToggle" class="dark-mode-label">
+          <div class="circle">
+            <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z" />
+            </svg>
+            <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.7-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z"
+                clip-rule="evenodd" />
+            </svg>
+          </div>
+        </label>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Hero Section -->
+  <header class="hero-section text-center text-white py-5">
+    <div class="container">
+      <h1 class="display-5">Find Your Perfect Internship Today!</h1>
+      <p>Connecting students with top companies to kickstart their careers.</p>
+
+      <!-- Search Bar -->
+      <div class="search-bar d-flex justify-content-center my-4">
+        <input type="text" id="searchInput" placeholder="Search for internships..." class="search-input" />
+        <button class="btn-search">Search</button>
+      </div>
+
+      <!-- New Search Container -->
+      <div class="search-container">
+        <div id="searchResults" class="suggestions"></div>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- Counter Section -->
+  <section class="counter-section">
+    <div class="counter-container">
+      <div class="counter-item">
+        <i class="fas fa-briefcase"></i>
+        <h3 class="counter" data-target="500">999+</h3>
+        <p>Verified Internships</p>
+      </div>
+      <div class="counter-item">
+        <i class="fas fa-user-graduate"></i>
+        <h3 class="counter" data-target="1200">2K+</h3>
+        <p>Applications Submitted</p>
+      </div>
+      <div class="counter-item">
+        <i class="fas fa-building"></i>
+        <h3 class="counter" data-target="200">100+</h3>
+        <p>Trusted Companies</p>
+      </div>
+      <div class="counter-item">
+        <i class="fas fa-handshake"></i>
+        <h3 class="counter" data-target="300">200+</h3>
+        <p>Students Placed</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Back to Top Button -->
+  <button id="back-to-top" aria-label="Back to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+
+  <!-- Why Choose Section -->
+  <section class="container my-5">
+    <h2 class="text-center mb-4">Why Choose InternshipHub?</h2>
+    <div class="row g-4">
+      <div class="col-md-3">
+        <div class="card feature-card text-center py-4">
+          <i class="fas fa-search feature-icon"></i>
+          <h5>Smart Internship Matching</h5>
+          <p>Find internships tailored to your skills and interests.</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card feature-card text-center py-4">
+          <i class="fas fa-paper-plane feature-icon"></i>
+          <h5>Easy Application Process</h5>
+          <p>Apply to internships with just a few clicks.</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card feature-card text-center py-4">
+          <i class="fas fa-clock feature-icon"></i>
+          <h5>Real-Time Status Tracking</h5>
+          <p>Stay updated on your application progress.</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card feature-card text-center py-4">
+          <i class="fas fa-check feature-icon"></i>
+          <h5>Verified Companies</h5>
+          <p>Connect with trusted companies and recruiters and get Hired! </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Internship Opportunities Section -->
+  <section class="container my-5">
+    <h2 class="text-center mb-4">Latest Internship Opportunities</h2>
+    <!-- Replaced grid layout with flex container -->
+    <div class="d-flex flex-row justify-content-between">
+      <!-- Card 1: Data Analyst -->
+      <div class="internship-card card-effect" style="flex:1; margin:0 10px;">
+        <img src="../static/images/DATA_ANALYTICS.webp" alt="Data Analyst" class="card-img-top">
+        <div class="card-body d-flex flex-column justify-content-between">
+          <div>
+            <h5>Data Analyst Intern</h5>
+            <p><strong>Company:</strong> Hero</p>
+            <p><strong>Location:</strong> Pune</p>
+            <p><strong>Type:</strong> Full Time</p>
+          </div>
+          <a href="#" class="btn apply-now-btn">Apply Now</a>
+        </div>
+      </div>
+      <!-- Card 2: Software Engineer -->
+      <div class="internship-card card-effect" style="flex:1; margin:0 10px;">
+        <img src="../static/images/SOFTWARE.jpeg" alt="Software Engineer" class="card-img-top">
+        <div class="card-body d-flex flex-column justify-content-between">
+          <div>
+            <h5>Software Engineer Intern</h5>
+            <p><strong>Company:</strong> Google</p>
+            <p><strong>Location:</strong> Mountain View, CA</p>
+            <p><strong>Salary:</strong> $25/hour</p>
+          </div>
+          <a href="#" class="btn apply-now-btn">Apply Now</a>
+        </div>
+      </div>
+      <!-- Card 3: Marketing Intern -->
+      <div class="internship-card card-effect" style="flex:1; margin:0 10px;">
+        <img src="../static/images/MARKETING.webp" alt="Marketing Intern" class="card-img-top">
+        <div class="card-body d-flex flex-column justify-content-between">
+          <div>
+            <h5>Marketing Intern</h5>
+            <p><strong>Company:</strong> Facebook</p>
+            <p><strong>Location:</strong> Remote</p>
+            <p><strong>Salary:</strong> $20/hour</p>
+          </div>
+          <a href="#" class="btn apply-now-btn">Apply Now</a>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-4">
+      <a href="internships.html" class="btn more-opportunities-btn">More Internship Opportunities on the Way</a>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="container my-5">
+    <h2 class="text-center mb-4">What Our Users Say</h2>
+    <div class="row g-4">
+      <!-- Testimonial 1 -->
+      <div class="col-md-4">
+        <div class="testimonial-card d-flex align-items-center">
+          <!-- Review on the Left -->
+          <div class="testimonial-content me-3">
+            <h5>Mohammed Ismail</h5>
+            <p>"InternshipHub helped me land my dream internship at Accenture. The platform is easy to use, and the
+              support team is amazing!"</p>
+            <a href="https://www.linkedin.com/in/johndoe" target="_blank" class="btn btn-linkedin rounded-pill">Visit
+              Profile</a>
+          </div>
+          <!-- Image on the Right -->
+          <img src="../static/images/ismail.jpg" alt="User 1 Ismail" class="testimonial-img rounded-circle">
+        </div>
+      </div>
+      <!-- Testimonial 2 -->
+      <div class="col-md-4">
+        <div class="testimonial-card d-flex align-items-center">
+          <div class="testimonial-content me-3">
+            <h5>Hardik Shah</h5>
+            <p>"I found my perfect internship through InternshipHub. The application process was seamless, and I got
+              real-time updates."</p>
+            <a href="https://www.linkedin.com/in/janesmith" target="_blank" class="btn btn-linkedin rounded-pill">Visit
+              Profile</a>
+          </div>
+          <img src="../static/images/hardik_shah.jpg" alt="User 2" class="testimonial-img rounded-circle">
+        </div>
+      </div>
+      <!-- Testimonial 3 -->
+      <div class="col-md-4">
+        <div class="testimonial-card d-flex align-items-center">
+          <div class="testimonial-content me-3">
+            <h5>Imran Khan</h5>
+            <p>"The verified companies on InternshipHub gave me peace of mind. I highly recommend this platform to all
+              students!" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p>
+            <a href="https://www.linkedin.com/in/alexjohnson" target="_blank"
+              class="btn btn-linkedin rounded-pill">Visit Profile</a>
+          </div>
+          <img src="../static/images/Imran Khan.jpg" alt="User 3" class="testimonial-img rounded-circle">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Top Companies Trusted Us Section -->
+  <section class="container my-5">
+    <h2 class="text-center mb-4">Top Companies Trusted Us</h2>
+    <div class="company-logos-carousel">
+      <div class="carousel-inner">
+        <!-- First Set of Logos -->
+        <img src="../static/images/" alt="Company 1 TCS" class="company-logo">
+        <img src="../static/images//INFOSYS.jpg" alt="Company 2 INFOSYS" class="company-logo">
+        <img src="../static/images//accenture.png" alt="Company 3 Accenture" class="company-logo">
+        <img src="../static/images//grow.png" alt="Company 4 Grow" class="company-logo">
+        <img src="../static/images//hero.png" alt="Company 5 Hero" class="company-logo">
+        <img src="../static/images//kotak.jpg" alt="Company 6 Kotak" class="company-logo">
+
+        <!-- Duplicate Set of Logos for Seamless Loop -->
+        <img src="../static/images/TCS.png" alt="Company 1 TCS" class="company-logo">
+        <img src="../static/images//INFOSYS.jpg" alt="Company 2 INFOSYS" class="company-logo">
+        <img src="../static/images//accenture.png" alt="Company 3 Accenture" class="company-logo">
+        <img src="../static/images//grow.png" alt="Company 4 Grow" class="company-logo">
+        <img src="../static/images//hero.png" alt="Company 5 Hero" class="company-logo">
+        <img src="../static/images//kotak.jpg" alt="Company 6 Kotak" class="company-logo">
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="container my-5">
+    <h2 class="text-center mb-4">How It Works</h2>
+    <div class="row g-4">
+      <!-- Step 1 -->
+      <div class="col-md-4">
+        <div class="step-card text-center py-4">
+          <i class="fas fa-user-plus step-icon"></i>
+          <h5>Create Your Profile</h5>
+          <p>Sign up and complete your profile with your skills, education, and preferences.</p>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="col-md-4">
+        <div class="step-card text-center py-4">
+          <i class="fas fa-search step-icon"></i>
+          <h5>Find Internships</h5>
+          <p>Browse through thousands of internships tailored to your profile.</p>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="col-md-4">
+        <div class="step-card text-center py-4">
+          <i class="fas fa-check step-icon"></i>
+          <h5>Apply & Get Hired</h5>
+          <p>Submit your application and track your progress in real-time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog Section -->
+  <section class="container my-5">
+    <h2 class="text-center mb-4">Latest Blog Posts</h2>
+    <div class="row g-4">
+      <!-- Blog Post 1 -->
+      <div class="col-md-4">
+        <div class="blog-card d-flex align-items-center">
+          <!-- Image on the Left -->
+          <img src="../static/images/internship.jpg" alt="Blog 1" class="blog-img me-3">
+          <!-- Content on the Right -->
+          <div class="blog-content">
+            <h5>How to Ace Your Internship Interview</h5>
+            <p>Learn the top tips and tricks to impress recruiters during your internship interview.</p>
+            <a href="https://in.indeed.com/career-advice/interviewing/how-to-ace-your-next-interview"
+              class="btn btn-primary rounded-pill" target="_blank">Read More</a>
+          </div>
+        </div>
+      </div>
+      <!-- Blog Post 2 -->
+      <div class="col-md-4">
+        <div class="blog-card d-flex align-items-center">
+          <img src="../static/images/skills.jpeg" alt="Blog 2" class="blog-img me-3">
+          <div class="blog-content">
+            <h5>Top Skills Employers Look For in Interns</h5>
+            <p>Discover the most in-demand skills that can help you stand out as an intern.</p>
+            <a href="https://prosple.com/applying/top-5-things-companies-look-for-when-hiring-interns"
+              class="btn btn-primary rounded-pill" target="_blank">Read More</a>
+          </div>
+        </div>
+      </div>
+      <!-- Blog Post 3 -->
+      <div class="col-md-4">
+        <div class="blog-card d-flex align-items-center">
+          <img src="../static/images/pros.jpeg" alt="Blog 3" class="blog-img me-3">
+          <div class="blog-content">
+            <h5>Remote Internships: Pros and Cons &nbsp</h5>
+            <p>Explore the advantages and challenges of working as a remote intern.</p>
+            <a href="https://absoluteinternship.com/blog/the-pros-and-cons-of-a-remote-internship/"
+              class="btn btn-primary rounded-pill" target="_blank">Read More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <!-- Updated FAQ Section -->
+  <section id="faq-section" class="container my-5">
+    <h2 class="text-center mb-4">Frequently Asked Questions (FAQ)</h2>
+    <div class="faq-wrapper">
+      <!-- Question 1 -->
+      <div class="faq-block">
+        <button class="faq-toggle">
+          Are there any charges for applying to internships?
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="faq-content" style="display: none;">
+          <p>No, there are no charges applicable for applying to internships. We do not support any company or recruiter
+            who asks for money from candidates. If you encounter such behavior, kindly share the details and proof of
+            communication with us at <a href="mailto:support@internshiphub.com">support@internshiphub.com</a>.</p>
+        </div>
+      </div>
+
+      <!-- Question 2 -->
+      <div class="faq-block">
+        <button class="faq-toggle">
+          How can I contact the recruiters?
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="faq-content" style="display: none;">
+          <p>You can contact recruiters directly through the messaging feature available on our platform. Once you apply
+            to an internship, you will receive further instructions on how to communicate with the recruiter.</p>
+        </div>
+      </div>
+
+      <!-- Question 3 -->
+      <div class="faq-block">
+        <button class="faq-toggle">
+          What should I do if the recruiters don't respond to my messages?
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="faq-content" style="display: none;">
+          <p>If you don't receive a response from the recruiter within a reasonable time frame, you can reach out to our
+            support team at <a href="mailto:support@internshiphub.com">support@internshiphub.com</a>. We will assist you
+            in resolving the issue.</p>
+        </div>
+      </div>
+
+      <!-- Question 4 -->
+      <div class="faq-block">
+        <button class="faq-toggle">
+          How can I contact your support team?
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="faq-content" style="display: none;">
+          <p>You can contact our support team via email at <a
+              href="mailto:support@internshiphub.com">support@internshiphub.com</a> or use the "Contact Us" form
+            available
+            on our website. We aim to respond to all queries within 24-48 hours.</p>
+        </div>
+      </div>
+
+      <!-- Question 5 -->
+      <div class="faq-block">
+        <button class="faq-toggle">
+          What type of internships do you offer?
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="faq-content" style="display: none;">
+          <p>We offer a wide range of internships across various industries, including IT, marketing, finance,
+            engineering, design, and more. Our platform connects students with top companies offering both remote and
+            in-office opportunities.</p>
+        </div>
+      </div>
+
+      <!-- Question 6 -->
+      <div class="faq-block">
+        <button class="faq-toggle">
+          How do I know if I am eligible for an internship?
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="faq-content" style="display: none;">
+          <p>Each internship listing includes detailed eligibility criteria, such as required skills, qualifications,
+            and
+            experience. Make sure to carefully read the job description before applying. If you're unsure, you can
+            always
+            reach out to the recruiter for clarification.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Modal Structure -->
+  <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitle"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER SECION -->
+  <footer class="footer">
+    <div class="footer-container">
+      <!-- About Us Section -->
+      <div class="footer-section about-us">
+        <h3>About Us</h3>
+        <p>We are dedicated to connecting talented college students with top companies offering exciting
+          internship
+          opportunities. Our mission is to help students gain real-world experience and kickstart their
+          careers.
+        </p>
+      </div>
+
+      <!-- Quick Links Section -->
+      <div class="footer-section quick-links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="internships.html">Internships</a></li>
+          <li><a href="about_us.html">About Us</a></li>
+          <li><a href="contact_us.html">Contact</a></li>
+          <li><a href="#faq-section">FAQ</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info Section -->
+      <div class="footer-section contact-info">
+        <h3>Contact Us</h3>
+        <p>Email: <a href="mailto:info@internshiphub.com">info@internshiphub.com</a></p>
+        <p>Phone: +1 (123) 456-7890</p>
+        <p>Address: 123 Internship Lane, Career City</p>
+        <div class="social-icons">
+          <div class="social-icons">
+            <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="footer-bottom">
+      <p>&copy; 2025 InternshipHub. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <!-- Add a DOMContentLoaded listener to call checkLoginStatus -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      checkLoginStatus();
+    });
+  </script>
+
+</body>
+
+</html>

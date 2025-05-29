@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Backend Developer - InternshipHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary: #4a4e69;
+            --secondary: #9a8c98;
+            --background: #f7ede2;
+            --text: #22223b;
+            --highlight: #c9ada7;
+            --light: #ffffff;
+            --dark: #2a2a2a;
+            --accent: #f4a261;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --danger: #DC3545;
+        }
+
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            margin: 0;
+            padding-top: 60px;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: var(--primary);
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            color: var(--light);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--light);
+            font-size: 1rem;
+            margin-right: 1rem;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--highlight);
+        }
+
+        .btn-login,
+        .btn-signup {
+            color: var(--light);
+            border-radius: 20px;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            margin-left: 0.5rem;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .btn-login {
+            background-color: transparent;
+            border: 1px solid var(--light);
+            width: 6rem;
+        }
+
+        .btn-signup {
+            background-color: transparent;
+            border: 1px solid var(--light);
+            width: 6rem;
+        }
+
+        .btn-login:hover {
+            background-color: var(--light);
+            color: var(--primary);
+        }
+
+        .btn-signup:hover {
+            color: white;
+            border: 2px solid bisque;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .page-header h1 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Job Details Section */
+        .job-section {
+            background-color: var(--light);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .job-section h2 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--highlight);
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .company-logo {
+            width: 120px;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid var(--highlight);
+            padding: 5px;
+        }
+
+        .job-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .job-company {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .job-location {
+            display: flex;
+            align-items: center;
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .job-location i {
+            margin-right: 8px;
+            color: var(--primary);
+        }
+
+        /* Job Details Grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .detail-item {
+            background-color: rgba(0, 0, 0, 0.02);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .detail-item h3 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .detail-item p {
+            font-size: 1rem;
+            color: var(--text);
+        }
+
+        /* Job Description */
+        .job-description {
+            margin-bottom: 30px;
+        }
+
+        .job-description h3 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .job-description p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+
+        /* Responsibilities */
+        .responsibilities {
+            margin-bottom: 30px;
+        }
+
+        .responsibilities h3 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .responsibilities ul {
+            list-style-type: none;
+            padding-left: 5px;
+        }
+
+        .responsibilities li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .responsibilities li:before {
+            content: "\f00c";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .btn-apply,
+        .btn-back {
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-apply {
+            background-color: var(--primary);
+            color: var(--light);
+        }
+
+        .btn-apply:hover {
+            background-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-back {
+            background-color: var(--highlight);
+            color: var(--text);
+        }
+
+        .btn-back:hover {
+            background-color: var(--secondary);
+            color: var(--light);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            background-color: var(--light);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .faq-section h2 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--highlight);
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .faq-item h3 {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .faq-item h3:before {
+            content: "\f059";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            margin-right: 10px;
+            color: var(--primary);
+        }
+
+        .faq-item p {
+            padding-left: 25px;
+        }
+
+        /* Footer Section */
+        .footer {
+            background-color: #4a4e69;
+            color: #ffffff;
+            padding: 2rem 1rem;
+            font-family: Arial, sans-serif;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-section {
+            flex: 1 1 300px;
+            margin: 1rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            font-size: 0.9rem;
+            color: #f0f0f0;
+            line-height: 1.6;
+            text-decoration: none;
+        }
+
+        .footer-section a:hover {
+            color: #d1e0ff;
+            text-decoration: underline;
+        }
+
+        .quick-links ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .quick-links ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 0.9em;
+            margin-top: 0.1rem;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light);
+            font-size: 1.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background-color: var(--highlight);
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 1rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Dark Mode Styling */
+        .dark-mode {
+            --background: #121212;
+            --text: #ffffff;
+            --light: #1e1e1e;
+            --dark: #333333;
+            --primary: #6b8cff;
+            --secondary: #bb86fc;
+            --highlight: #03dac6;
+            --accent: #ff7597;
+        }
+
+        .dark-mode .job-section,
+        .dark-mode .faq-section {
+            background-color: var(--light);
+            color: var(--text);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .dark-mode .detail-item {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .dark-mode .job-section h2,
+        .dark-mode .faq-section h2,
+        .dark-mode .job-title,
+        .dark-mode .detail-item h3,
+        .dark-mode .job-description h3,
+        .dark-mode .responsibilities h3,
+        .dark-mode .faq-item h3 {
+            color: var(--highlight);
+        }
+
+        .dark-mode .btn-back {
+            background-color: var(--dark);
+        }
+
+        .dark-mode .btn-back:hover {
+            background-color: var(--secondary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .job-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .company-logo {
+                margin-bottom: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-apply,
+            .btn-back {
+                width: 100%;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .social-icons {
+                justify-content: center;
+            }
+        }
+
+        /* Dark Mode Toggle */
+        .dark-mode-toggle {
+            position: relative;
+            margin-left: 15px;
+        }
+
+        .dark-mode-toggle input {
+            display: none;
+        }
+
+        .dark-mode-label {
+            cursor: pointer;
+            display: block;
+            width: 50px;
+            height: 26px;
+            position: relative;
+        }
+
+        .circle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50px;
+            height: 26px;
+            background-color: #f1f1f1;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5px;
+        }
+
+        .sun,
+        .moon {
+            width: 16px;
+            height: 16px;
+            color: #333;
+        }
+
+        .moon {
+            display: none;
+        }
+
+        #darkModeToggle:checked+.dark-mode-label .circle {
+            background-color: #333;
+        }
+
+        #darkModeToggle:checked+.dark-mode-label .sun {
+            display: none;
+        }
+
+        #darkModeToggle:checked+.dark-mode-label .moon {
+            display: block;
+            color: #f1f1f1;
+        }
+
+        .btn-login,
+        .btn-signup,
+        .btn-dashboard,
+        .btn-logout {
+            color: var(--light);
+            border-radius: 20px;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            margin-left: 0.5rem;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .btn-login {
+            background-color: transparent;
+            border: 1px solid var(--light);
+            width: 6rem;
+        }
+
+        .btn-signup {
+            background-color: transparent;
+            border: 1px solid var(--light);
+            width: 6rem;
+        }
+
+        .btn-dashboard {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.4rem 1.3rem;
+            border-radius: 5rem;
+            text-decoration: none;
+        }
+
+        .btn-logout {
+            background-color: #c9ada7;
+            color: black;
+            padding: 0.4rem 1.2rem;
+            border-radius: 5rem;
+            text-decoration: none;
+        }
+
+        .btn-login:hover {
+            background-color: var(--light);
+            color: var(--primary);
+        }
+
+        .btn-signup:hover {
+            color: white;
+            border: 2px solid bisque;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-dashboard:hover {
+            background-color: var(--secondary);
+            color: var(--background);
+        }
+
+        .btn-logout:hover {
+            background-color: var(--primary);
+            color: var(--background);
+            border: 1px solid #c9ada7;
+        }
+
+        .navbar-nav .nav-link.active {
+            color: var(--highlight);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--light);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div id="navbar">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href="#"> <i class="fas fa-laptop-code"></i> <span>InternshipHub</span></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../internships.html">Internships</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../about_us.html">About Us</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../contact_us.html">Contact Us</a></li>
+                    </ul>
+                    <div class="d-flex align-items-center">
+                        <a href="../login.html" id="login-link" class="btn btn-login me-2">Login</a>
+                        <a href="{{ url_for('recruiter') }}" id="dashboard-link"
+                            class="btn btn-dashboard me-2">Dashboard</a>
+                        <a href="#" id="logout-link" class="btn btn-logout">Logout</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Dark Mode Toggle -->
+            <div class="dark-mode-toggle">
+                <input type="checkbox" id="darkModeToggle">
+                <label for="darkModeToggle" class="dark-mode-label">
+                    <div class="circle">
+                        <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z" />
+                        </svg>
+                        <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.7-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </label>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1>Backend Developer Internship</h1>
+            <p>Join our team and build the future of web applications</p>
+        </div>
+
+        <!-- Job Details Section -->
+        <section class="job-section">
+            <div class="job-header">
+                <div>
+                    <h1 class="job-title">Backend Developer</h1>
+                    <p class="job-company">Groww</p>
+                    <p class="job-location"><i class="fas fa-map-marker-alt"></i> Hyderabad</p>
+                </div>
+                <img src="{{ url_for('static', filename='images/grow.png') }}" alt="Grow Logo" class="company-logo">
+            </div>
+
+            <div class="details-grid">
+                <div class="detail-item">
+                    <h3><i class="fas fa-calendar-alt"></i> Start Date</h3>
+                    <p>April 1, 2025</p>
+                </div>
+                <div class="detail-item">
+                    <h3><i class="fas fa-calendar-check"></i> End Date</h3>
+                    <p>September 30, 2025</p>
+                </div>
+                <div class="detail-item">
+                    <h3><i class="fas fa-hourglass-end"></i> Application Deadline</h3>
+                    <p>March 21, 2025</p>
+                </div>
+                <div class="detail-item">
+                    <h3><i class="fas fa-users"></i> Positions Available</h3>
+                    <p>8</p>
+                </div>
+                <div class="detail-item">
+                    <h3><i class="fas fa-briefcase"></i> Internship Type</h3>
+                    <p>Full Time, Paid</p>
+                </div>
+                <div class="detail-item">
+                    <h3><i class="fas fa-rupee-sign"></i> Stipend</h3>
+                    <p>₹10,000/month</p>
+                </div>
+                <div class="detail-item">
+                    <h3><i class="fas fa-tools"></i> Skills Required</h3>
+                    <p>Node.js, Express.js, MongoDB, SQL, RESTful APIs, Version Control (Git)</p>
+                </div>
+            </div>
+
+            <div class="job-description">
+                <h3><i class="fas fa-info-circle"></i> Internship Description</h3>
+                <p>Join Groww as a Backend Developer Intern and gain hands-on experience in building and maintaining
+                    server-side applications. You'll work alongside experienced developers, learning industry best
+                    practices in backend development and contributing to real-world projects. This internship offers a
+                    unique opportunity to enhance your skills in Node.js, Express.js, MongoDB, and SQL while working in
+                    a dynamic, fast-paced environment.</p>
+            </div>
+
+            <div class="responsibilities">
+                <h3><i class="fas fa-tasks"></i> Responsibilities</h3>
+                <ul>
+                    <li>Develop and maintain server-side logic and APIs</li>
+                    <li>Ensure the performance, quality, and responsiveness of applications</li>
+                    <li>Collaborate with front-end developers to integrate user-facing elements</li>
+                    <li>Implement security and data protection measures</li>
+                    <li>Stay up-to-date with emerging trends and technologies in backend development</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="action-buttons">
+            <a href="../internships.html"><button class="btn-back"><i class="fas fa-arrow-left"></i> Back to
+                    Internships</button></a>
+        </div>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h3>What are the eligibility criteria?</h3>
+                <p>Candidates should be pursuing or have recently completed a degree in Computer Science or a related
+                    field. Strong knowledge of Node.js, Express.js, and databases like MongoDB or SQL is required.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How can I apply?</h3>
+                <p>Click the 'Apply Now' button above and fill out the application form. Make sure to attach your resume
+                    and a cover letter.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Is this internship full-time?</h3>
+                <p>Yes, this is a full-time internship requiring a commitment of 40 hours per week.</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- FOOTER SECTION -->
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- About Us Section -->
+            <div class="footer-section about-us">
+                <h3>About Us</h3>
+                <p>We are dedicated to connecting talented college students with top companies offering exciting
+                    internship opportunities. Our mission is to help students gain real-world experience and kickstart
+                    their
+                    careers.
+                </p>
+            </div>
+
+            <!-- Quick Links Section -->
+            <div class="footer-section quick-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../internships.html">Internships</a></li>
+                    <li><a href="../about_us.html">About Us</a></li>
+                    <li><a href="../contact_us.html">Contact</a></li>
+                    <li><a href="../index.html#faq-section">FAQ</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Info Section -->
+            <div class="footer-section contact-info">
+                <h3>Contact Us</h3>
+                <p>Email: <a href="/cdn-cgi/l/email-protection#c4adaaa2ab84ada4b0a1b6a4b7acadb4acb1a6eaa7aba9"><span
+                            class="__cf_email__"
+                            data-cfemail="c4adaaa2ab84ada4b0a1b6a4b7acadb4acb1a6eaa7aba9">[email&#160;protected]</span></a>
+                </p>
+                <p>Phone: +1 (123) 456-7890</p>
+                <p>Address: 123 Internship Lane, Career City</p>
+                <div class="social-icons">
+                    <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="footer-bottom">
+            <p>&copy; 2025 InternshipHub. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init();
+
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+
+        // Check for saved theme preference or prefer-color-scheme
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        const savedTheme = localStorage.getItem('theme');
+
+        // If the user has explicitly chosen a theme, use that
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+        } else if (savedTheme === 'light') {
+            document.body.classList.remove('dark-mode');
+            darkModeToggle.checked = false;
+        } else if (prefersDarkScheme.matches) {
+            // If no saved preference, use the system preference
+            document.body.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+        }
+
+        // Add toggle event listener
+        darkModeToggle.addEventListener('change', function () {
+            if (this.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+        <script src="../../static/js/script.js"></script>
+</body>
+
+</html>

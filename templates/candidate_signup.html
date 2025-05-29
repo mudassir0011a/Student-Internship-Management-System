@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InternshipHub - Registration Form</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="registration-side">
+                <h1>Sign Up</h1>
+                <form id="registerFormCandidate" class="registration-form" method="POST" action="{{ url_for('auth_bp.candidate_signup') }}">
+                    <div class="input-group">
+                        <input type="text" id="firstName" name="firstName" class="form-control" placeholder="First Name">
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Last Name">
+                    </div>
+                    <div class="input-group">
+                        <input type="email" id="email" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="input-group password-container">
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Password">
+                        <i id="togglePassword" class="fa fa-eye toggle-password"></i>
+                        <small id="passwordError" style="color: red;"></small>
+                    </div>
+
+                    <div class="input-group password-container">
+                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="Confirm Password">
+                        <i id="toggleConfirmPassword" class="fa fa-eye toggle-password"></i>
+                        <small id="confirmPasswordError" style="color: red;"></small>
+                    </div>
+
+                    <input type="hidden" id="role" name="role" value="student">
+                    <button type="submit" id="registerBtn" class="register-btn">Register</button>
+                </form>
+            </div>
+
+            <div class="welcome-side">
+                <div class="welcome-content">
+                    <h2>Welcome Back!</h2>
+                    <p>Already have an account?</p>
+                    <a href="{{ url_for('main.login') }}"> <button class="login-btn">Login</button> </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".toggle-password").forEach((icon) => {
+                icon.addEventListener("click", function () {
+                    let passwordField = this.previousElementSibling;
+                    passwordField.type = passwordField.type === "password" ? "text" : "password";
+                    this.classList.toggle("fa-eye");
+                    this.classList.toggle("fa-eye-slash");
+                });
+            });
+        });
+
+        document.getElementById("password").addEventListener("input", function () {
+            let password = this.value;
+            let errorElement = document.getElementById("passwordError");
+            let uppercasePattern = /^[A-Z]/;
+            let specialCharPattern = /[\W_]/;
+
+            if (password.length < 8) {
+                errorElement.textContent = "Password must be at least 8 characters.";
+            } else if (!uppercasePattern.test(password)) {
+                errorElement.textContent = "Password must start with an uppercase letter.";
+            } else if (!specialCharPattern.test(password)) {
+                errorElement.textContent = "Password must contain at least one special character.";
+            } else {
+                errorElement.textContent = "";
+            }
+        });
+
+        document.getElementById("confirmPassword").addEventListener("input", function () {
+            let password = document.getElementById("password").value;
+            let confirmPassword = this.value;
+            let errorElement = document.getElementById("confirmPasswordError");
+
+            errorElement.textContent = password !== confirmPassword ? "Passwords do not match." : "";
+        });
+
+        /* 
+        Removed JavaScript preventing default form submission 
+        */
+    </script>
+</body>
+</html>

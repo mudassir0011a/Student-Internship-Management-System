@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Registration | Internship Management System</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="icon" href="../IMAGES/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 24px;
+            display: flex;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            min-height: 500px;
+        }
+
+        .registration-side {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .registration-side h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .description {
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .registration-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        /* Scrollbar styling */
+        .registration-form::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .registration-form::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .registration-form::-webkit-scrollbar-thumb {
+            background: #9a8c98;
+            border-radius: 10px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 16px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .input-group textarea {
+            width: 100%;
+            padding: 16px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .input-group input::placeholder,
+        .input-group textarea::placeholder {
+            color: #888;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-container input {
+            width: 100%;
+            padding-right: 40px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #888;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload-label {
+            display: block;
+            padding: 16px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #888;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-name {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+
+        .register-btn {
+            background: #9a8c98;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .register-btn:hover {
+            background: rgb(56, 52, 56);
+        }
+
+        .welcome-side {
+            background: #9a8c98;
+            width: 45%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: white;
+            text-align: center;
+            border-top-left-radius: 50px;
+            border-bottom-left-radius: 50px;
+        }
+
+        .welcome-content h2 {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .welcome-content p {
+            margin-bottom: 24px;
+            opacity: 0.9;
+        }
+
+        .login-btn {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background: white;
+            color: rgb(56, 52, 56);
+            font-weight: 900;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .card {
+                flex-direction: column-reverse;
+            }
+
+            .welcome-side {
+                width: 100%;
+                border-radius: 0;
+                padding: 60px 24px;
+            }
+
+            .registration-side {
+                padding: 32px 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="registration-side">
+                <h1>Sign Up as a Company</h1>
+                <p class="description">Register your company to post internship opportunities and connect with talented
+                    students.</p>
+                <form id="registerFormCompany" class="registration-form" method="POST"
+                    action="{{ url_for('auth_bp.company_signup') }}" enctype="multipart/form-data">
+                    <div class="input-group">
+                        <input type="text" id="companyName" name="companyName" placeholder="Company Name" required>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="email" id="companyEmail" name="companyEmail" placeholder="Company Email" required>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="input-group password-container">
+                        <input type="password" id="password" name="password" placeholder="Password" required>
+                        <i class="fas fa-eye toggle-password"></i>
+                        <small id="passwordError" class="error-message"></small>
+                    </div>
+                    <!-- Confirm Password Field -->
+                    <div class="input-group password-container">
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
+                        <i class="fas fa-eye toggle-password"></i>
+                        <small id="confirmPasswordError" class="error-message"></small>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="tel" id="contactNumber" name="contactNumber" placeholder="Contact Number" required>
+                    </div>
+
+                    <!-- Add Industry Type Field -->
+                    <div class="input-group">
+                        <input type="text" id="industryType" name="industryType" placeholder="Enter Industry Type"
+                            required>
+                    </div>
+                    <!-- Add Company Logo File Input -->
+                    <div class="input-group">
+                        <input type="file" id="companyLogo" name="companyLogo" accept="image/*" placeholder="Company Logo" required>
+                    </div>
+
+                    <div class="input-group checkbox-group">
+                        <input type="checkbox" id="termsAgreement" name="termsAgreement" required>
+                        <label for="termsAgreement">I agree to the Terms & Conditions and Privacy Policy.</label>
+                    </div>
+
+                    <button type="submit" class="register-btn">Register</button>
+                </form>
+            </div>
+
+            <div class="welcome-side">
+                <div class="welcome-content">
+                    <h2>Welcome Back!</h2>
+                    <p>Already have an account?</p>
+                    <a href="{{ url_for('main.login') }}"> <button class="login-btn">Login Here</button> </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Toggle password visibility
+            document.querySelectorAll(".toggle-password").forEach((icon) => {
+                icon.addEventListener("click", function () {
+                    let field = this.previousElementSibling;
+                    field.type = field.type === "password" ? "text" : "password";
+                    this.classList.toggle("fa-eye-slash");
+                    this.classList.toggle("fa-eye");
+                });
+            });
+
+            // Password validation for company signup
+            const passwordField = document.getElementById("password");
+            const passwordError = document.getElementById("passwordError");
+            const uppercasePattern = /[A-Z]/;
+            const specialCharPattern = /[\W_]/;
+            const numberPattern = /\d/;
+            if (passwordField && passwordError) {
+                passwordField.addEventListener("input", function () {
+                    const pwd = this.value;
+                    if (pwd.length < 8) {
+                        passwordError.textContent = "Password must be at least 8 characters.";
+                    } else if (!uppercasePattern.test(pwd)) {
+                        passwordError.textContent = "Password must contain at least one uppercase letter.";
+                    } else if (!specialCharPattern.test(pwd)) {
+                        passwordError.textContent = "Password must contain at least one special character.";
+                    } else if (!numberPattern.test(pwd)) {
+                        passwordError.textContent = "Password must contain at least one number.";
+                    } else {
+                        passwordError.textContent = "";
+                    }
+                });
+            }
+
+            // Confirm password validation
+            const confirmPasswordField = document.getElementById("confirmPassword");
+            const confirmPasswordError = document.getElementById("confirmPasswordError");
+            if (confirmPasswordField && confirmPasswordError) {
+                confirmPasswordField.addEventListener("input", function () {
+                    const cpwd = this.value;
+                    const pwd = passwordField.value;
+                    confirmPasswordError.textContent = (pwd !== cpwd) ? "Passwords do not match." : "";
+                });
+            }
+
+            // File upload display
+            document.getElementById("logo").addEventListener("change", function () {
+                const fileName = this.files[0] ? this.files[0].name : "";
+                document.getElementById("fileName").textContent = fileName;
+            });
+
+            // Password validation
+            const passwordFieldOld = document.getElementById("password");
+            const errorElement = document.getElementById("passwordError");
+            const uppercasePatternOld = /[A-Z]/;
+            const specialCharPatternOld = /[\W_]/;
+            const numberPatternOld = /\d/;
+
+            if (passwordFieldOld && errorElement) {
+                passwordFieldOld.addEventListener("input", function () {
+                    const password = this.value;
+                    if (password.length < 8) {
+                        errorElement.textContent = "Password must be at least 8 characters.";
+                    } else if (!uppercasePatternOld.test(password)) {
+                        errorElement.textContent = "Password must contain at least one uppercase letter.";
+                    } else if (!specialCharPatternOld.test(password)) {
+                        errorElement.textContent = "Password must contain at least one special character.";
+                    } else if (!numberPatternOld.test(password)) {
+                        errorElement.textContent = "Password must contain at least one number.";
+                    } else {
+                        errorElement.textContent = "";
+                    }
+                });
+            }
+
+            // Confirm password validation
+            document.getElementById("confirmPassword").addEventListener("input", function () {
+                let password = document.getElementById("password").value;
+                let confirmPassword = this.value;
+                let errorElement = document.getElementById("confirmPasswordError");
+
+                if (password !== confirmPassword) {
+                    errorElement.textContent = "Passwords do not match.";
+                } else {
+                    errorElement.textContent = "";
+                }
+            });
+
+            // Form submission
+            document.getElementById("registerFormCompany").addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                // Get all required fields
+                const companyName = document.getElementById("companyName").value.trim();
+                const email = document.getElementById("email").value.trim();
+                const password = document.getElementById("password").value.trim();
+                const confirmPassword = document.getElementById("confirmPassword").value.trim();
+                const industry = document.getElementById("industry").value.trim();
+                const logo = document.getElementById("logo").files[0];
+                const termsAgreement = document.getElementById("termsAgreement").checked;
+
+                // Validate required fields
+                if (!companyName || !email || !password || !confirmPassword || !industry || !logo || !termsAgreement) {
+                    alert("Please fill in all required details and accept the terms.");
+                    return;
+                }
+
+                // Validate passwords match
+                if (password !== confirmPassword) {
+                    alert("Passwords do not match!");
+                    return;
+                }
+
+                // Show success message
+                Swal.fire({
+                    title: "Registration Successful!",
+                    text: "Your company account has been created. You can now post internship opportunities!",
+                    icon: "success",
+                    confirmButtonText: "Get Started",
+                    confirmButtonColor: "#9a8c98",
+                    timer: 5000,
+                    timerProgressBar: true
+                }).then((result) => {
+                    window.location.href = "login.html";
+                });
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Toggle visibility for password and confirm password fields
+            document.querySelectorAll(".toggle-password").forEach(function(icon) {
+                var inputField = icon.previousElementSibling;
+                icon.addEventListener("click", function () {
+                    if (inputField.type === "password") {
+                        inputField.type = "text";
+                        icon.classList.remove("fa-eye");
+                        icon.classList.add("fa-eye-slash");
+                    } else {
+                        inputField.type = "password";
+                        icon.classList.remove("fa-eye-slash");
+                        icon.classList.add("fa-eye");
+                    }
+                });
+            });
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>
